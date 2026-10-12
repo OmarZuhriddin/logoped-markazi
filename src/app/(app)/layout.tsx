@@ -19,11 +19,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   // sozlamalari va paroli unga kerak emas — u faqat Telegram orqali kiradi.
   if (user.role === "PARENT") redirect("/m");
   const t = await getT();
-  const { logoUrl: centerLogo } = await getSettings();
+    const { logoUrl: centerLogo, centerName } = await getSettings();
   // Yakka logoped menyu tepasiga o'z nomi va logotipini qo'yadi (Sozlamalar);
   // qo'ymagan bo'lsa — standart nom va markaz logotipi
   const solo = isSolo(user);
-  const brandTitle = (solo && user.brandName) || "Logoped CRM";
+  const brandTitle = solo ? user.brandName || "Logoped CRM" : centerName;
   const logoUrl =
     solo && user.brandLogoAt && user.branchId
       ? `/api/logo?b=${user.branchId}&v=${new Date(user.brandLogoAt).getTime()}`
