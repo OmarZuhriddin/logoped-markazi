@@ -64,6 +64,7 @@ export default async function IntakesPage({
   const sp = await searchParams;
 
   const offset = Number.parseInt(sp.m ?? "0", 10) || 0;
+  const now = new Date();
   const base = new Date();
   base.setDate(1);
   base.setMonth(base.getMonth() + offset);
@@ -347,7 +348,10 @@ export default async function IntakesPage({
                       </Badge>
                       {i.status === "PLANNED" ? (
                         <div className="mt-1 flex items-center gap-2 whitespace-nowrap">
-                          {(["DONE", "NO_SHOW", "CANCELLED"] as IntakeStatus[]).map((s) => (
+                          {(["DONE", "NO_SHOW", "CANCELLED"] as IntakeStatus[])
+                            // "O'tdi"/"kelmadi" faqat vaqti boshlangach; bekor qilish har doim
+                            .filter((s) => s === "CANCELLED" || i.scheduledAt <= now)
+                            .map((s) => (
                             <form key={s} action={setIntakeStatus}>
                               <input type="hidden" name="intakeId" value={i.id} />
                               <input type="hidden" name="status" value={s} />
@@ -372,9 +376,11 @@ export default async function IntakesPage({
                         </Link>
                       ) : (
                         <>
-                          <Badge className={INTAKE_RESULT_STYLE[i.result as IntakeResult]}>
-                            {t(INTAKE_RESULTS[i.result as IntakeResult])}
-                          </Badge>
+                          {i.result !== "PENDING" ? (
+                            <Badge className={INTAKE_RESULT_STYLE[i.result as IntakeResult]}>
+                              {t(INTAKE_RESULTS[i.result as IntakeResult])}
+                            </Badge>
+                          ) : null}
                           <div className="mt-1 flex flex-col items-start gap-0.5 whitespace-nowrap">
                             {i.status === "DONE" ? (
                               <form action={convertIntake}>
@@ -394,7 +400,7 @@ export default async function IntakesPage({
                               </span>
                             ) : null}
                             {INTAKE_RESULT_KEYS.filter(
-                              (r) => r !== "CONVERTED" && r !== i.result,
+                              (r) => r !== "CONVERTED" && r !== "PENDING" && r !== i.result,
                             ).map((r) => (
                               <form key={r} action={setIntakeResult}>
                                 <input type="hidden" name="intakeId" value={i.id} />
