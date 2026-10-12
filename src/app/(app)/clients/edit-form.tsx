@@ -1,3 +1,4 @@
+import { DateField } from "@/components/date-field";
 import { toDateInput } from "@/lib/format";
 import { getT } from "@/lib/i18n/server";
 import { btnPrimary, input, label } from "@/components/ui";
@@ -43,13 +44,7 @@ export async function ClientEditForm({
       </div>
       <div>
         <label className={label}>{t("Tug'ilgan sana")} *</label>
-        <input
-          name="birthDate"
-          type="date"
-          defaultValue={toDateInput(client.birthDate)}
-          className={input}
-          required
-        />
+        <DateField name="birthDate" defaultValue={toDateInput(client.birthDate)} required />
       </div>
       <div>
         <label className={label}>{t("Jinsi")}</label>

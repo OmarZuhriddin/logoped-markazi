@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { DateField } from "@/components/date-field";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireRole, NOT_SOLO, branchWhere, isSolo } from "@/lib/auth";
@@ -164,7 +165,7 @@ export default async function IntakesPage({
             <label className={label} htmlFor="birthDate">
               {t("Tug'ilgan sana")} *
             </label>
-            <input id="birthDate" name="birthDate" type="date" className={input} required />
+            <DateField id="birthDate" name="birthDate" required />
           </div>
           <div>
             <label className={label} htmlFor="parentName">
@@ -437,13 +438,7 @@ export default async function IntakesPage({
                           </div>
                           <div>
                             <label className={label}>{t("Tug'ilgan sana")}</label>
-                            <input
-                              name="birthDate"
-                              type="date"
-                              defaultValue={toDateInput(i.birthDate)}
-                              className={input}
-                              required
-                            />
+                            <DateField name="birthDate" defaultValue={toDateInput(i.birthDate)} required />
                           </div>
                           <div>
                             <label className={label}>{t("Ota-ona F.I.Sh.")}</label>

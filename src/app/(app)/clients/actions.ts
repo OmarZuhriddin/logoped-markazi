@@ -1,5 +1,6 @@
 "use server";
 
+import { parseDateInput } from "@/lib/format";
 import { revalidatePath } from "next/cache";
 import { withFlash } from "@/lib/action";
 import { setFlash } from "@/lib/flash";
@@ -84,7 +85,7 @@ async function createClientImpl(formData: FormData) {
     throw new Error("Majburiy maydonlarni to'liq to'ldiring.");
   }
 
-  const birthDate = new Date(birthDateRaw);
+  const birthDate = parseDateInput(birthDateRaw);
   if (Number.isNaN(birthDate.getTime())) throw new Error("Tug'ilgan sana noto'g'ri.");
 
   // Ota-ona akkaunti doim ochiladi: u kabinetga faqat Telegram orqali,
@@ -173,7 +174,7 @@ async function updateClientImpl(formData: FormData) {
   if (!fullName || !birthDateRaw || !parentName || !parentPhone) {
     throw new Error("Majburiy maydonlarni to'liq to'ldiring.");
   }
-  const birthDate = new Date(birthDateRaw);
+  const birthDate = parseDateInput(birthDateRaw);
   if (Number.isNaN(birthDate.getTime())) throw new Error("Tug'ilgan sana noto'g'ri.");
 
   let parentUserId = client.parentUserId;

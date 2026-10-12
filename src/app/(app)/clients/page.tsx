@@ -1,4 +1,5 @@
 import { getSessionTypes } from "@/lib/session-types";
+import { DateField } from "@/components/date-field";
 import { Fragment } from "react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -211,7 +212,7 @@ export default async function ClientsPage({
               <label className={label} htmlFor="birthDate">
                 {t("Tug'ilgan sana")} *
               </label>
-              <input id="birthDate" name="birthDate" type="date" className={input} required />
+              <DateField id="birthDate" name="birthDate" required />
             </div>
             <div>
               <label className={label} htmlFor="gender">

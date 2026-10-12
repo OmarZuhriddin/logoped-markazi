@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { withFlash } from "@/lib/action";
 import { setFlash } from "@/lib/flash";
 import { getT } from "@/lib/i18n/server";
-import { dateTimeUz } from "@/lib/format";
+import { dateTimeUz, parseDateInput } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
 import { requireUser, isSolo, type CurrentUser } from "@/lib/auth";
 import {
@@ -69,7 +69,7 @@ async function createIntakeImpl(formData: FormData) {
   if (!childName || !parentName || !parentPhone || !branchId) {
     throw new Error("Bola ismi, ota-ona ismi, telefon va filial majburiy.");
   }
-  const birthDate = new Date(birthDateRaw);
+  const birthDate = parseDateInput(birthDateRaw);
   if (Number.isNaN(birthDate.getTime())) throw new Error("Tug'ilgan sana noto'g'ri.");
   const scheduledAt = new Date(scheduledRaw);
   if (Number.isNaN(scheduledAt.getTime())) throw new Error("Qabul vaqti noto'g'ri.");
@@ -129,7 +129,7 @@ async function updateIntakeImpl(formData: FormData) {
   if (!childName || !parentName || !parentPhone) {
     throw new Error("Bola ismi, ota-ona ismi va telefon majburiy.");
   }
-  const birthDate = new Date(birthDateRaw);
+  const birthDate = parseDateInput(birthDateRaw);
   if (Number.isNaN(birthDate.getTime())) throw new Error("Tug'ilgan sana noto'g'ri.");
   const scheduledAt = new Date(scheduledRaw);
   if (Number.isNaN(scheduledAt.getTime())) throw new Error("Qabul vaqti noto'g'ri.");
