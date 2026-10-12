@@ -1665,6 +1665,22 @@ if (await payRow.count()) {
     (await row.innerText()).includes("avval"),
   );
 
+  // Vaqti kelmagan qabulda "o'tdi"/"kelmadi" yo'q, "bekor" bor; "Hali aniq emas" ko'rinmaydi
+  await all("UPDATE Intake SET scheduledAt = (NOW() AT TIME ZONE 'UTC') + INTERVAL '2 days' WHERE childName = ?", child);
+  await page.reload();
+  await page.waitForLoadState("networkidle");
+  const futureRow = page.locator(`tr:has-text("${child}")`).first();
+  const futureText = await futureRow.innerText();
+  check(
+    "Vaqti kelmagan qabulda o'tdi/kelmadi tugmasi yo'q, bekor bor",
+    (await futureRow.locator('button:text-is("o\'tdi"), button:text-is("kelmadi")').count()) === 0 &&
+      (await futureRow.locator('button:text-is("bekor")').count()) === 1,
+  );
+  check("Natija ustunida \"Hali aniq emas\" yozuvi yo'q", !futureText.includes("Hali aniq emas"));
+  await all("UPDATE Intake SET scheduledAt = (NOW() AT TIME ZONE 'UTC') - INTERVAL '1 hour' WHERE childName = ?", child);
+  await page.reload();
+  await page.waitForLoadState("networkidle");
+
   // Konsultatsiya o'tdi
   await row.locator('button:has-text("o\'tdi")').first().click();
   const held = await waitUntil(

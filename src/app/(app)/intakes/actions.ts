@@ -182,6 +182,12 @@ async function setIntakeStatusImpl(formData: FormData) {
   const status = String(formData.get("status") ?? "") as IntakeStatus;
   if (!INTAKE_STATUS_KEYS.includes(status)) throw new Error("Holat noto'g'ri.");
 
+  // Vaqti kelmagan konsultatsiya "o'tdi" yoki "kelmadi" bo'lolmaydi; bekor
+  // qilish esa oldindan ham mumkin. Tugma yashirilgani yetmaydi — server ham tekshiradi.
+  if ((status === "DONE" || status === "NO_SHOW") && intake.scheduledAt > new Date()) {
+    throw new Error("Konsultatsiya vaqti hali boshlanmagan.");
+  }
+
   await prisma.intake.update({ where: { id: intake.id }, data: { status } });
   refresh();
 }
