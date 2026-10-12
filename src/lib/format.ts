@@ -76,6 +76,19 @@ export function toDateInput(d: Date | string): string {
   return `${x.getFullYear()}-${p(x.getMonth() + 1)}-${p(x.getDate())}`;
 }
 
+/**
+ * Sana maydonidan kelgan matnni Date ga aylantiradi: "05.05.2020" (kun.oy.yil)
+ * yoki "2020-05-05". Noto'g'ri sana (31.02.2020 ham) NaN beradi.
+ */
+export function parseDateInput(raw: string): Date {
+  const s = raw.trim();
+  const m = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(s);
+  if (!m) return new Date(s);
+  const [d, mo, y] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  const date = new Date(Date.UTC(y, mo - 1, d));
+  return date.getUTCDate() === d && date.getUTCMonth() === mo - 1 ? date : new Date(NaN);
+}
+
 /** <input type="datetime-local"> uchun 2026-03-14T09:30 */
 export function toDateTimeInput(d: Date | string): string {
   return `${toDateInput(d)}T${timeUz(d)}`;
