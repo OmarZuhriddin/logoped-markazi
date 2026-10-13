@@ -778,4 +778,10 @@ export const en: Record<string, string> = {
   "Hali xizmat qo'shilmagan. Seans yozish uchun kamida bitta xizmat kerak.": "No services yet. At least one service is needed to book sessions.",
   "Yangi xizmat": "New service",
   "Ulush — seans narxidan mutaxassisga tegadigan foiz. U seans \"O'tdi\" belgilangan paytda seans bilan birga saqlanadi: keyin o'zgartirsangiz, o'tgan seanslar hisobi o'zgarmaydi.": "Share is the percentage of the session price that goes to the specialist. It is saved with the session when it is marked \"Done\": changing it later does not affect past sessions.",
+  "Sanani tanlash": "Pick a date",
+  "Oy": "Month",
+  "Yil": "Year",
+  "Soat": "Hour",
+  "Daqiqa": "Minute",
+  "OK": "OK",
 };

@@ -1,5 +1,6 @@
 "use server";
 
+import { parseDateInput } from "@/lib/format";
 import { revalidatePath } from "next/cache";
 import { withFlash } from "@/lib/action";
 import { setFlash } from "@/lib/flash";
@@ -210,7 +211,7 @@ async function paySalaryImpl(formData: FormData) {
   }
 
   const paidAtRaw = String(formData.get("paidAt") ?? "");
-  const paidAt = paidAtRaw ? new Date(paidAtRaw) : new Date();
+  const paidAt = paidAtRaw ? parseDateInput(paidAtRaw) : new Date();
 
   await prisma.salaryPayout.create({
     data: {

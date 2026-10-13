@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DateField } from "@/components/date-field";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { clientScope, requireUser, NOT_SOLO, isFrontDesk, isSolo } from "@/lib/auth";
@@ -300,13 +301,7 @@ export default async function ClientPage({
                       <label className={label} htmlFor="paidAt">
                         {t("Sana")}
                       </label>
-                      <input
-                        id="paidAt"
-                        name="paidAt"
-                        type="date"
-                        defaultValue={toDateInput(new Date())}
-                        className={input}
-                      />
+                      <DateField id="paidAt" name="paidAt" defaultValue={toDateInput(new Date())} />
                     </div>
                     <div className="sm:col-span-2">
                       <label className={label} htmlFor="paymentNote">

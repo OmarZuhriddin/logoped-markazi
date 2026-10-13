@@ -506,7 +506,7 @@ async function addPaymentImpl(formData: FormData) {
   const packageId = String(formData.get("packageId") ?? "") || null;
 
   const paidAtRaw = String(formData.get("paidAt") ?? "");
-  const paidAtParsed = paidAtRaw ? new Date(paidAtRaw) : new Date();
+  const paidAtParsed = paidAtRaw ? parseDateInput(paidAtRaw) : new Date();
   const paidAt = Number.isNaN(paidAtParsed.getTime()) ? new Date() : paidAtParsed;
   const note = String(formData.get("note") ?? "").trim() || null;
 
@@ -588,7 +588,7 @@ async function updatePaymentImpl(formData: FormData) {
   const method = String(formData.get("method") ?? payment.method) as PaymentMethod;
   if (!PAYMENT_METHOD_KEYS.includes(method)) throw new Error("To'lov usuli noto'g'ri.");
   const paidAtRaw = String(formData.get("paidAt") ?? "");
-  const paidAtParsed = paidAtRaw ? new Date(paidAtRaw) : payment.paidAt;
+  const paidAtParsed = paidAtRaw ? parseDateInput(paidAtRaw) : payment.paidAt;
   if (Number.isNaN(paidAtParsed.getTime())) throw new Error("Sana noto'g'ri.");
   // Faqat sana kiritiladi — asl vaqtni saqlaymiz, aks holda ro'yxat tartibi buziladi
   const paidAt = new Date(paidAtParsed);

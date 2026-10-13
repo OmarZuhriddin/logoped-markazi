@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { DateField } from "@/components/date-field";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireRole, NOT_SOLO, branchWhere } from "@/lib/auth";
@@ -281,13 +282,7 @@ export default async function PaymentsPage({
                 <label className={label} htmlFor="paidAt">
                   {t("Sana")}
                 </label>
-                <input
-                  id="paidAt"
-                  name="paidAt"
-                  type="date"
-                  defaultValue={toDateInput(new Date())}
-                  className={input}
-                />
+                <DateField id="paidAt" name="paidAt" defaultValue={toDateInput(new Date())} />
               </div>
               <div className="sm:col-span-2">
                 <label className={label} htmlFor="note">
@@ -388,12 +383,7 @@ export default async function PaymentsPage({
                               </div>
                               <div>
                                 <label className={label}>{t("Sana")}</label>
-                                <input
-                                  name="paidAt"
-                                  type="date"
-                                  defaultValue={toDateInput(p.paidAt)}
-                                  className={input}
-                                />
+                                <DateField name="paidAt" defaultValue={toDateInput(p.paidAt)} />
                               </div>
                               <div className="sm:col-span-2 lg:col-span-4">
                                 <label className={label}>{t("Izoh")}</label>

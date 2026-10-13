@@ -1626,6 +1626,18 @@ if (await payRow.count()) {
   const parentPhone = `+99893${String(Date.now()).slice(-7)}`;
   await page.click('summary:has-text("Yangi qabul")');
   await page.fill("#childName", child);
+  // Kalendardan tanlash: «OK» bosilgunga qadar maydon o'zgarmaydi
+  await page.locator("#birthDate").locator("xpath=..").locator('button[aria-label="Sanani tanlash"]').click();
+  await page.locator('[role="dialog"] select').first().selectOption("4");
+  await page.locator('[role="dialog"] select').nth(1).selectOption("2019");
+  await page.locator('[role="dialog"] button:text-is("15")').click();
+  const beforeOk = await page.inputValue("#birthDate");
+  await page.locator('[role="dialog"] button:text-is("OK")').click();
+  check(
+    "Kalendardan tanlangan sana «OK» bosilgach maydonga tushadi",
+    beforeOk === "" && (await page.inputValue("#birthDate")) === "15.05.2019",
+    `${beforeOk} -> ${await page.inputValue("#birthDate")}`,
+  );
   await page.fill("#birthDate", "2021-05-10");
   await page.fill("#parentName", "Sinov Ota-onayev");
   await page.fill("#parentPhone", parentPhone);

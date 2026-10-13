@@ -778,4 +778,10 @@ export const ru: Record<string, string> = {
   "Hali xizmat qo'shilmagan. Seans yozish uchun kamida bitta xizmat kerak.": "Услуг пока нет. Для записи занятий нужна хотя бы одна услуга.",
   "Yangi xizmat": "Новая услуга",
   "Ulush — seans narxidan mutaxassisga tegadigan foiz. U seans \"O'tdi\" belgilangan paytda seans bilan birga saqlanadi: keyin o'zgartirsangiz, o'tgan seanslar hisobi o'zgarmaydi.": "Доля — процент от цены занятия, который получает специалист. Он сохраняется вместе с занятием в момент отметки «Прошло»: если изменить его позже, прошлые занятия не пересчитываются.",
+  "Sanani tanlash": "Выбрать дату",
+  "Oy": "Месяц",
+  "Yil": "Год",
+  "Soat": "Час",
+  "Daqiqa": "Минута",
+  "OK": "ОК",
 };
