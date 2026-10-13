@@ -471,6 +471,7 @@ if (await payRow.count()) {
   await page.goto(`${BASE}/specialists`);
   await page.waitForLoadState("networkidle");
   await page.click('summary:has-text("Yangi mutaxassis")');
+  await page.fill("#specialization", "Neyropsixolog");
   await page.fill("#fullName", "Sinov Xodimov");
   await page.fill("#phone", taken.phone);
   await page.fill("#password", "parol123");
