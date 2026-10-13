@@ -3,7 +3,7 @@ import { PwaRegister } from "@/components/pwa";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Logopedik markaz CRM",
+  title: "Logoped",
   description:
     "Logopedik markaz uchun boshqaruv tizimi: filiallar, mutaxassislar, mijozlar, jadval, davomat va to'lovlar.",
   applicationName: "Logoped",

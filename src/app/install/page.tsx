@@ -14,6 +14,20 @@ export default function InstallPage() {
   const [installed, setInstalled] = useState(false);
   const [platform, setPlatform] = useState<"ios" | "android" | "desktop">("desktop");
 
+  // Ilova ichidan havola orqali kirilganda layout skripti qayta ishlamaydi,
+  // shuning uchun kunduzgi rejim bu yerda ham qo'yiladi; chiqishda tanlangan
+  // rejim qaytariladi.
+  useEffect(() => {
+    const root = document.documentElement;
+    const wasDark = root.classList.contains("dark");
+    root.classList.remove("dark");
+    root.style.colorScheme = "light";
+    return () => {
+      if (wasDark) root.classList.add("dark");
+      root.style.colorScheme = wasDark ? "dark" : "light";
+    };
+  }, []);
+
   useEffect(() => {
     const ua = navigator.userAgent;
     if (/iPhone|iPad|iPod/i.test(ua)) setPlatform("ios");
@@ -42,7 +56,7 @@ export default function InstallPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/icon-192.png" alt="" className="h-12 w-12 rounded-xl" />
           <div>
-            <h1 className="text-base font-bold text-slate-900 dark:text-white">Logoped CRM</h1>
+            <h1 className="text-base font-bold text-slate-900 dark:text-white">Logoped</h1>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               {t("Telefon bosh ekraniga o'rnatish")}
             </p>
