@@ -6,7 +6,10 @@
  * ko'rinib qolishi mumkin edi. Faqat o'zgarmaydigan statik fayllar saqlanadi,
  * internet uzilganda esa oddiy "aloqa yo'q" sahifasi ko'rsatiladi.
  */
-const CACHE = "logoped-static-v1";
+// Ikonka yoki boshqa statik fayl almashtirilganda raqamni oshiring: statik
+// fayllar keshdan olinadi, raqam o'zgarmasa telefon va brauzer eski rasmni
+// (masalan eski ikonkani) abadiy ko'rsatib turadi.
+const CACHE = "logoped-static-v2";
 const OFFLINE_PAGE = "/offline.html";
 
 self.addEventListener("install", (event) => {
