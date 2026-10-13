@@ -7,6 +7,7 @@ import {
   SPECIALIZATIONS,
   type SessionStatus,
   type Specialization,
+  specLabel,
 } from "@/lib/constants";
 import { addDays, getSpecialistEarnings, monthRange, startOfDay } from "@/lib/stats";
 import { dateShort, timeUz } from "@/lib/format";
@@ -73,7 +74,7 @@ export default async function MiniAppPage({
         <div className="min-w-0">
           <p className="truncate text-base font-bold">{user.fullName}</p>
           <p className="truncate text-xs app-muted">
-            {t(SPECIALIZATIONS[user.specialization as Specialization])}
+            {t(specLabel(user.specialization))}
             {/* Yakka mutaxassisning "filiali" — o'zi uchun ochilgan ichki yozuv,
                 uni ekranda ko'rsatishning ma'nosi yo'q */}
             {user.branchName && !isSolo(user) ? ` · ${user.branchName}` : ""}

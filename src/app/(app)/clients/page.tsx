@@ -11,6 +11,7 @@ import {
   SPECIALIZATIONS,
   type ClientStatus,
   type Specialization,
+  specLabel,
 } from "@/lib/constants";
 import {
   Badge,
@@ -359,7 +360,7 @@ export default async function ClientsPage({
                                 {a.specialist.user.fullName}
                               </span>
                               <span className="ml-1.5 text-xs text-slate-400">
-                                {t(SPECIALIZATIONS[a.specialist.specialization as Specialization])}
+                                {t(specLabel(a.specialist.specialization))}
                               </span>
                             </span>
                           ))

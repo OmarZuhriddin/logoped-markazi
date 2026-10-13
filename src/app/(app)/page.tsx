@@ -7,6 +7,7 @@ import {
   SPECIALIZATIONS,
   type SessionStatus,
   type Specialization,
+  specLabel,
 } from "@/lib/constants";
 import {
   dayRange,
@@ -217,7 +218,7 @@ export default async function DashboardPage() {
               { label: t("Holat") },
             ]}
             rows={todaySessions.map((s) => {
-              const spec = t(SPECIALIZATIONS[s.specialist.specialization as Specialization]);
+              const spec = t(specLabel(s.specialist.specialization));
               const status = t(SESSION_STATUSES[s.status as SessionStatus]);
               return {
                 key: s.id,
@@ -277,7 +278,7 @@ export default async function DashboardPage() {
             { label: t("Ish haqi"), className: "tabular-nums" },
           ]}
           rows={specialistRows.map((sp) => {
-            const spec = t(SPECIALIZATIONS[sp.specialization as Specialization]);
+            const spec = t(specLabel(sp.specialization));
             return {
               key: sp.id,
               search: `${sp.fullName} ${spec} ${sp.branchName}`,

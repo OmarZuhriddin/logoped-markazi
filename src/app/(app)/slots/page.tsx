@@ -2,7 +2,7 @@ import { getSessionTypes } from "@/lib/session-types";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireRole, NOT_SOLO, branchWhere, isSolo } from "@/lib/auth";
-import { SPECIALIZATIONS, type Specialization } from "@/lib/constants";
+import { SPECIALIZATIONS, type Specialization, specLabel } from "@/lib/constants";
 import { daySlots, getWorkHours, isWorkDay, minutesToTime } from "@/lib/settings";
 import { addDays, startOfDay } from "@/lib/stats";
 import { dateShort, timeUz } from "@/lib/format";
@@ -206,7 +206,7 @@ export default async function SlotsPage({
                         {s.user.fullName}
                       </span>
                       <span className="block text-xs text-slate-400">
-                        {t(SPECIALIZATIONS[s.specialization as Specialization])}
+                        {t(specLabel(s.specialization))}
                         {branchId ? "" : ` · ${s.branch.name}`}
                       </span>
                     </td>

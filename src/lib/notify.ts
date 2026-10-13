@@ -1,7 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { sendMessage } from "@/lib/telegram";
-import { SPECIALIZATIONS, type Specialization } from "@/lib/constants";
+import { SPECIALIZATIONS, type Specialization, specLabel } from "@/lib/constants";
 import { dateShort, timeUz, weekdayUz } from "@/lib/format";
 import { addDays, startOfDay } from "@/lib/stats";
 
@@ -73,7 +73,7 @@ export async function queueTomorrowReminders(now: Date = new Date()): Promise<nu
   return queue(
     sessions.flatMap((s) => {
       if (!s.client.parentUserId) return [];
-      const spec = SPECIALIZATIONS[s.specialist.specialization as Specialization];
+      const spec = specLabel(s.specialist.specialization);
       return [
         {
           userId: s.client.parentUserId,
@@ -119,7 +119,7 @@ export async function queueSessionDone(sessionId: string): Promise<number> {
   });
   if (!parent?.telegramId || !parent.isActive) return 0;
 
-  const spec = SPECIALIZATIONS[session.specialist.specialization as Specialization];
+  const spec = specLabel(session.specialist.specialization);
 
   return queue([
     {
@@ -179,7 +179,7 @@ export async function queueParentCancel(sessionId: string, reason: string): Prom
     select: { id: true },
   });
 
-  const spec = SPECIALIZATIONS[session.specialist.specialization as Specialization];
+  const spec = specLabel(session.specialist.specialization);
   const text =
     `❌ <b>Ota-ona mashg'ulotni bekor qildi</b>\n\n` +
     `<b>${session.client.fullName}</b> · ${spec}\n` +

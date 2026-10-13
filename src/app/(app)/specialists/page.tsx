@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { requireRole, NOT_SOLO, branchWhere } from "@/lib/auth";
 import { getSettings } from "@/lib/settings";
 import { prisma } from "@/lib/prisma";
-import { SPECIALIZATIONS, SPECIALIZATION_KEYS, type Specialization } from "@/lib/constants";
+import { SPECIALIZATIONS, SPECIALIZATION_KEYS, type Specialization, specLabel } from "@/lib/constants";
 import { getSpecialistBalances, getSpecialistRows, monthRange } from "@/lib/stats";
 import { dateShort, toDateInput } from "@/lib/format";
 import {
@@ -105,13 +105,14 @@ export default async function SpecialistsPage() {
             <label className={label} htmlFor="specialization">
               {t("Mutaxassislik")} *
             </label>
-            <select id="specialization" name="specialization" className={input} required>
-              {SPECIALIZATION_KEYS.map((s) => (
-                <option key={s} value={s}>
-                  {t(SPECIALIZATIONS[s])}
-                </option>
-              ))}
-            </select>
+            <input
+              id="specialization"
+              name="specialization"
+              className={input}
+              maxLength={60}
+              placeholder={t("Masalan: Logoped")}
+              required
+            />
           </div>
           {branches.length > 0 ? (
             <div>
@@ -187,7 +188,7 @@ export default async function SpecialistsPage() {
                       )}
                     </td>
                     <td className={td}>
-                      <Badge>{t(SPECIALIZATIONS[r.specialization as Specialization])}</Badge>
+                      <Badge>{t(specLabel(r.specialization))}</Badge>
                     </td>
                     {!branchId ? <td className={td}>{r.branchName}</td> : null}
                     <td className={`${td} tabular-nums`}>{r.clients}</td>
@@ -234,17 +235,13 @@ export default async function SpecialistsPage() {
                           </div>
                           <div>
                             <label className={label}>{t("Mutaxassislik")}</label>
-                            <select
+                            <input
                               name="specialization"
-                              defaultValue={r.specialization}
+                              defaultValue={specLabel(r.specialization)}
                               className={input}
-                            >
-                              {SPECIALIZATION_KEYS.map((k) => (
-                                <option key={k} value={k}>
-                                  {t(SPECIALIZATIONS[k])}
-                                </option>
-                              ))}
-                            </select>
+                              maxLength={60}
+                              required
+                            />
                           </div>
                           {branches.length > 0 ? (
                             <div>
@@ -311,7 +308,7 @@ export default async function SpecialistsPage() {
                   <td className={`${td} font-medium`}>
                     {b.fullName}
                     <span className="block text-xs text-slate-400">
-                      {t(SPECIALIZATIONS[b.specialization as Specialization])}
+                      {t(specLabel(b.specialization))}
                     </span>
                   </td>
                   {!branchId ? <td className={td}>{b.branchName}</td> : null}
@@ -668,7 +665,7 @@ export default async function SpecialistsPage() {
                     {s.user.fullName}
                   </p>
                   <p className="text-xs text-slate-400">
-                    {t(SPECIALIZATIONS[s.specialization as Specialization])} · {s.branch.name}
+                    {t(specLabel(s.specialization))} · {s.branch.name}
                   </p>
                 </div>
                 <form action={toggleSpecialistActive}>

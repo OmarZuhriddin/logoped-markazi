@@ -6,7 +6,7 @@ import { withFlash } from "@/lib/action";
 import { setFlash } from "@/lib/flash";
 import { prisma } from "@/lib/prisma";
 import { hashPassword, requireUser, type CurrentUser } from "@/lib/auth";
-import { SPECIALIZATION_KEYS, type Specialization } from "@/lib/constants";
+import { normalizeSpecialization } from "@/lib/constants";
 
 async function requireAdmin(): Promise<CurrentUser> {
   const user = await requireUser();
@@ -23,13 +23,14 @@ async function createSpecialistImpl(formData: FormData) {
   const fullName = String(formData.get("fullName") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const specialization = String(formData.get("specialization") ?? "") as Specialization;
+  const specialization = normalizeSpecialization(String(formData.get("specialization") ?? ""));
   const salaryPercent = Number(formData.get("salaryPercent") ?? 40);
   const branchId =
     user.role === "OWNER" ? String(formData.get("branchId") ?? "") : (user.branchId ?? "");
 
   if (!fullName || !phone || !branchId) throw new Error("Ism, telefon va filial majburiy.");
-  if (!SPECIALIZATION_KEYS.includes(specialization)) throw new Error("Mutaxassislikni tanlang.");
+  if (!specialization) throw new Error("Mutaxassislikni yozing.");
+  if (specialization.length > 60) throw new Error("Mutaxassislik 60 belgidan oshmasin.");
   if (password.length < 5) throw new Error("Parol kamida 5 belgidan bo'lsin.");
   if (!Number.isInteger(salaryPercent) || salaryPercent < 0 || salaryPercent > 100) {
     throw new Error("Ish haqi foizi 0 dan 100 gacha bo'lishi kerak.");
@@ -82,7 +83,7 @@ async function updateSpecialistImpl(formData: FormData) {
   const fullName = String(formData.get("fullName") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const specialization = String(formData.get("specialization") ?? "") as Specialization;
+  const specialization = normalizeSpecialization(String(formData.get("specialization") ?? ""));
   // Ulush endi xizmatda turadi (Sozlamalar → Xizmatlar). Xodimdagi foiz faqat
   // xizmatsiz eski seanslar uchun qolgan — forma uni yubormasa, tegilmaydi.
   const percentRaw = formData.get("salaryPercent");
@@ -92,7 +93,8 @@ async function updateSpecialistImpl(formData: FormData) {
     user.role === "OWNER" ? String(formData.get("branchId") ?? "") || sp.branchId : sp.branchId;
 
   if (!fullName || !phone) throw new Error("Ism va telefon majburiy.");
-  if (!SPECIALIZATION_KEYS.includes(specialization)) throw new Error("Mutaxassislikni tanlang.");
+  if (!specialization) throw new Error("Mutaxassislikni yozing.");
+  if (specialization.length > 60) throw new Error("Mutaxassislik 60 belgidan oshmasin.");
   if (
     salaryPercent !== undefined &&
     (!Number.isInteger(salaryPercent) || salaryPercent < 0 || salaryPercent > 100)

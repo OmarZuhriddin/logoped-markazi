@@ -23,6 +23,30 @@ export const SPECIALIZATIONS = {
 export type Specialization = keyof typeof SPECIALIZATIONS;
 export const SPECIALIZATION_KEYS = Object.keys(SPECIALIZATIONS) as Specialization[];
 
+/**
+ * Mutaxassislikni ko'rsatiladigan nomga aylantiradi. Xodim qo'shganda
+ * mutaxassislik erkin yoziladi, shuning uchun bazada kalit ("ABA") ham,
+ * qo'lda yozilgan nom ("Neyropsixolog") ham turishi mumkin: ro'yxatda
+ * bo'lmaganini o'zi qaytaradi.
+ */
+export function specLabel(value: string | null | undefined): string {
+  if (!value) return "";
+  return (SPECIALIZATIONS as Record<string, string>)[value] ?? value;
+}
+
+/**
+ * Yozilgan mutaxassislikni saqlash shakliga keltiradi: ro'yxatdagi nom yoki
+ * kalitga to'g'ri kelsa kalit ("aba terapevt" -> "ABA") — shunda hisobotlarda
+ * bir xil mutaxassislik ikkiga bo'linib qolmaydi; boshqasi yozilgani bo'yicha.
+ */
+export function normalizeSpecialization(raw: string): string {
+  const v = raw.trim().replace(/\s+/g, " ");
+  const hit = SPECIALIZATION_KEYS.find(
+    (k) => k.toLowerCase() === v.toLowerCase() || SPECIALIZATIONS[k].toLowerCase() === v.toLowerCase(),
+  );
+  return hit ?? v;
+}
+
 /** Seans holatlari */
 export const SESSION_STATUSES = {
   PLANNED: "Rejada",

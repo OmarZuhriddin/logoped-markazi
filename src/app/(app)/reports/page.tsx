@@ -6,6 +6,7 @@ import {
   SPECIALIZATIONS,
   type SessionStatus,
   type Specialization,
+  specLabel,
 } from "@/lib/constants";
 import { getOverview, getSpecialistRows, monthRange } from "@/lib/stats";
 import { num } from "@/lib/format";
@@ -212,7 +213,7 @@ export default async function ReportsPage({
                       <td className={td}>
                         {r.fullName}
                         <span className="block text-xs text-slate-400">
-                          {t(SPECIALIZATIONS[r.specialization as Specialization])}
+                          {t(specLabel(r.specialization))}
                           {!branchId ? ` · ${r.branchName}` : ""}
                         </span>
                       </td>
@@ -239,7 +240,7 @@ export default async function ReportsPage({
                   <li key={r.specialization} className="px-4 py-3">
                     <div className="flex items-center justify-between gap-2 text-sm">
                       <span className="font-medium text-slate-800 dark:text-slate-200">
-                        {t(SPECIALIZATIONS[r.specialization as Specialization])}
+                        {t(specLabel(r.specialization))}
                       </span>
                       <span className="tabular-nums text-slate-600 dark:text-slate-400">
                         {t("{n} seans", { n: r.done })} · {t.money(r.revenue)}
