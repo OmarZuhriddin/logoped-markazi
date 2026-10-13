@@ -7,7 +7,7 @@ import { setFlash } from "@/lib/flash";
 import { dateTimeUz } from "@/lib/format";
 import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { requireUser, isSolo } from "@/lib/auth";
 import { SESSION_STATUS_KEYS, type SessionStatus } from "@/lib/constants";
 import { queueSessionDone, sendPending } from "@/lib/notify";
 import { getSettings } from "@/lib/settings";
@@ -65,6 +65,10 @@ async function setSessionStatusImpl(formData: FormData) {
   // narx seans xizmatidan olinadi. Aks holda narx 0 bo'lib qolardi va
   // mutaxassis o'sha seansdan hech narsa olmasdi.
   const billable = status === "DONE" || status === "NO_SHOW";
+  // Vaqti kelmagan seansni o'tdi/kelmadi deb bo'lmaydi; bekor qilish mumkin
+  if (billable && session.startsAt > new Date()) {
+    throw new Error("Seans vaqti hali boshlanmagan.");
+  }
   // Narx: seansda yozilgani -> abonement narxi -> seans turining narxi ->
   // mutaxassisning o'z narxi -> markazning standart narxi. Abonement turdan
   // oldin: ota-ona abonementni o'sha narxda to'lagan. Yakka mutaxassisning
@@ -114,6 +118,8 @@ async function setSessionStatusImpl(formData: FormData) {
 async function createSessionImpl(formData: FormData) {
   const user = await requireUser();
   if (user.role === "PARENT") throw new Error("Sizda bu amal uchun ruxsat yo'q.");
+  // Markazdagi mutaxassis seans yozmaydi (yakka mutaxassis o'ziga o'zi rahbar)
+  if (user.role === "SPECIALIST" && !isSolo(user)) throw new Error("Sizda bu amal uchun ruxsat yo'q.");
 
   const clientId = String(formData.get("clientId") ?? "");
   const specialistId = String(formData.get("specialistId") ?? "");

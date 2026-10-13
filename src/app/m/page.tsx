@@ -185,8 +185,12 @@ async function SessionList({
           <div className="mt-2.5 flex flex-wrap gap-1.5">
             {s.status === "PLANNED" ? (
               <>
-                <MarkButton id={s.id} status="DONE" label={t("O'tdi")} tone="good" />
-                <MarkButton id={s.id} status="NO_SHOW" label={t("Kelmadi")} tone="bad" />
+                {s.startsAt <= new Date() ? (
+                  <>
+                    <MarkButton id={s.id} status="DONE" label={t("O'tdi")} tone="good" />
+                    <MarkButton id={s.id} status="NO_SHOW" label={t("Kelmadi")} tone="bad" />
+                  </>
+                ) : null}
                 <MarkButton id={s.id} status="CANCELLED_CLIENT" label={t("Bekor")} tone="warn" />
               </>
             ) : (

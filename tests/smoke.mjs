@@ -179,8 +179,13 @@ const weekOffsetOf = (date) =>
 // Joriy haftada rejadagi seans qolmagan bo'lishi mumkin (masalan hafta oxirida),
 // shuning uchun eng yaqin rejadagi seansni topib, o'sha haftaga o'tamiz.
 const nextPlanned = await one(
-  "SELECT startsAt FROM Session WHERE status='PLANNED' ORDER BY startsAt ASC LIMIT 1",
+  "SELECT id, startsAt FROM Session WHERE status='PLANNED' ORDER BY startsAt ASC LIMIT 1",
 );
+// Vaqti kelmagan seansda "O'tdi" tugmasi yo'q — sinash uchun uni o'tib ketgan vaqtga suramiz
+if (nextPlanned && new Date(nextPlanned.startsAt) > new Date()) {
+  await all("UPDATE Session SET startsAt = (NOW() AT TIME ZONE 'UTC') - INTERVAL '1 hour' WHERE id = ?", nextPlanned.id);
+  nextPlanned.startsAt = new Date(Date.now() - 3600_000);
+}
 const plannedWeek = nextPlanned ? weekOffsetOf(nextPlanned.startsAt) : 0;
 
 await page.goto(`${BASE}/schedule?w=${plannedWeek}`);
@@ -993,7 +998,18 @@ if (await payRow.count()) {
   if (!sess) {
     check("Seans narxi va ulushi xizmatdan olinadi", false, "seans yozilmadi");
   } else {
+  // Vaqti kelmagan seansda "O'tdi"/"Kelmadi" yo'q, "Bekor" bor
   await page.goto(`${BASE}/schedule?w=${weekOffsetOf(day)}`);
+  await page.waitForLoadState("networkidle");
+  const futureLi = page.locator(`li:has(input[name="sessionId"][value="${sess.id}"])`).first();
+  check(
+    "Vaqti kelmagan seansda o'tdi/kelmadi tugmasi yo'q, bekor bor",
+    (await futureLi.locator('button:text-is("O\'tdi"), button:text-is("Kelmadi")').count()) === 0 &&
+      (await futureLi.locator('button:text-is("Bekor")').count()) === 1,
+  );
+  // Kelajakdagi seans "O'tdi" bo'lolmaydi — vaqtini o'tib ketgan soatga suramiz
+  await all("UPDATE Session SET startsAt = (NOW() AT TIME ZONE 'UTC') - INTERVAL '1 hour' WHERE id = ?", sess.id);
+  await page.goto(`${BASE}/schedule?w=${weekOffsetOf(new Date(Date.now() - 3600_000))}`);
   await page.waitForLoadState("networkidle");
   const card = page
     .locator("li, div")
@@ -2487,6 +2503,9 @@ check(
 
     if (sess) {
       const mondayOf = (d) => { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
+      // Kelajakdagi seans "O'tdi" bo'lolmaydi — vaqtini o'tib ketgan soatga suramiz
+      await all("UPDATE Session SET startsAt = (NOW() AT TIME ZONE 'UTC') - INTERVAL '1 hour' WHERE id = ?", sess.id);
+      sess.startsAt = new Date(Date.now() - 3600_000);
       const offset = Math.round((mondayOf(sess.startsAt) - mondayOf(new Date())) / (7 * 86400000));
       await page.goto(`${BASE}/schedule?w=${offset}`);
       await page.waitForLoadState("networkidle");
