@@ -129,6 +129,7 @@ npm run build && npm start -- -p 3100    # boshqa terminalda
 node tests/smoke.mjs      # CRM, rollar, qabullar, filiallar, bo'sh vaqtlar, sozlamalar, zaxira, Telegram holati, kunlik to'lov, mijozni o'chirish, to'lovni tuzatish, panel jadvallari, vaqt zonasi, yakka mutaxassis, PWA, kanalga e'lon, Telegram'da login yopiq, xizmatlar, abonementsiz hisob, egani tahrirlash, mijoz formasi, yakka sozlamalari, qo'shish oynasi yopilishi, ish vaqti va tushlik, Google Sheets zaxira (jonli), mijozlar puli va holati (233)
 node tests/telegram.mjs   # bog'lanish, imzo, mutaxassis Mini App (19)
 node tests/parent.mjs     # ota-ona kabineti, eslatmalar, to'lovlar, mutaxassislar, bekor qilish, Farzandim, tun/kun, Telegram'dan tashqari kirish yo'q, yakka logoped mijozi, hisob-kitob (34)
+node tests/click.mjs      # Click to'lov manzili: imzo, summa, Prepare/Complete (CLICK_* bo'lsa)
 node tests/prefs.mjs      # tun/kun rejimi, til, tarjima to'liqligi, logotip, tepa panel (41)
 ```
 
@@ -288,6 +289,15 @@ Jadval, Davomat, To'lovlar, Mutaxassislar.
   yechilmaydi), sabab `note` ga qo'shiladi, mutaxassis va filial xodimlariga
   Telegram xabar boradi. Mashg'ulotga `PARENT_CANCEL_MIN_HOURS` dan kam qolsa
   bekor qilib bo'lmaydi — markazga qo'ng'iroq qilinadi.
+- **Click orqali onlayn to'lov** (`src/lib/click.ts`, `/api/click`,
+  `src/app/m/click-pay.tsx`). Ota-ona kabinetda summa yozadi, `ClickTransaction`
+  yaratiladi, Click sahifasi ochiladi. Pul faqat Click'ning imzolangan
+  **Complete** so'rovi kelganda `Payment` (usul `CLICK`) bo'lib yoziladi —
+  kabinetning o'zida hech narsa "to'langan" hisoblanmaydi. Imzo va summa har
+  so'rovda tekshiriladi, takroriy Complete ikkinchi to'lov yozmaydi. Yakka
+  logopedning mijozlari bu yo'ldan to'lay olmaydi (Click hisobi markazniki).
+  `CLICK_*` muhit o'zgaruvchilari bo'lmasa butun yo'l o'chiq. Click so'rovlarining
+  maydonlari va imzo tartibini o'zgartirishdan oldin Click hujjatiga qarang.
 - **Kanalga e'lon** — Sozlamalarda (ega va yakka logoped) bot nomidan
   ota-onalar kanaliga "Kabinetni ochish" tugmali post qo'yiladi
   (`postToChannel`, `src/lib/telegram.ts`). Kanalda `web_app` tugmasi

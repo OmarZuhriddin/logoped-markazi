@@ -795,4 +795,13 @@ export const en: Record<string, string> = {
   "Uzcard": "Uzcard",
   "Humo": "Humo",
   "Boshqa karta": "Other card",
+  "Click orqali to'lov hozircha yoqilmagan.": "Payment via Click is not enabled yet.",
+  "Summa {min} dan {max} gacha bo'lsin.": "The amount must be between {min} and {max}.",
+  "Click orqali to'lash": "Pay with Click",
+  "Uzcard yoki Humo kartasi bilan to'lang.": "Pay with your Uzcard or Humo card.",
+  "To'lash": "Pay",
+  "Qarzni to'lash: {sum}": "Pay the debt: {sum}",
+  "To'lovdan keyin shu sahifaga qaytib, uni yangilang — to'lov Click tasdiqlagach ko'rinadi.": "After paying, come back to this page and refresh it — the payment appears once Click confirms it.",
+  "Amal bajarilmadi. Qaytadan urinib ko'ring.": "The action failed. Please try again.",
+  "Click": "Click",
 };

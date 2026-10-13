@@ -13,6 +13,8 @@ import {
 } from "@/lib/constants";
 import { cancelByParent } from "./parent-actions";
 import { TgLink } from "./tg-link";
+import { ClickPay } from "./click-pay";
+import { clickEnabled } from "@/lib/click";
 import { ParentTabNav, ParentTabs, TabPanel } from "./parent-tabs";
 import { dateShort, timeUz } from "@/lib/format";
 import { getT } from "@/lib/i18n/server";
@@ -373,6 +375,9 @@ export async function ParentApp({
             <span className="text-base font-bold tabular-nums">{balanceView}</span>
           </div>
         </section>
+        {clickEnabled() && !solo ? (
+          <ClickPay clientId={child.id} suggested={Math.max(0, -balance)} />
+        ) : null}
         {(
         payments.length === 0 ? (
           <p className="app-card px-4 py-8 text-center text-sm app-muted">

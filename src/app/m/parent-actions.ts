@@ -6,7 +6,9 @@ import { ActionError, withFlash } from "@/lib/action";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { setFlash } from "@/lib/flash";
-import { PARENT_CANCEL_MIN_HOURS } from "@/lib/constants";
+import { PARENT_CANCEL_MIN_HOURS, CLICK_MIN, CLICK_MAX } from "@/lib/constants";
+import { clickEnabled, clickPayUrl } from "@/lib/click";
+import { getT } from "@/lib/i18n/server";
 import { queueParentCancel, sendPending } from "@/lib/notify";
 
 /**
@@ -84,3 +86,47 @@ async function cancelByParentImpl(formData: FormData) {
 }
 
 export const cancelByParent = withFlash(cancelByParentImpl);
+
+/**
+ * Ota-ona Click orqali to'lovni boshlaydi: to'lov urinishi yoziladi va Click
+ * sahifasining manzili qaytadi. Pul tizimga faqat Click Complete'ni
+ * tasdiqlaganda tushadi (`/api/click`), bu yerda hech narsa to'langan hisoblanmaydi.
+ *
+ * Yakka logopedning mijozi bu yerdan to'lay olmaydi: Click hisobi markazniki,
+ * pul logopedga emas, markazga tushib qolardi.
+ */
+export async function startClickPayment(
+  formData: FormData,
+): Promise<{ url?: string; error?: string }> {
+  const user = await requireUser();
+  const t = await getT();
+  if (user.role !== "PARENT") return { error: t("Sizda bu amal uchun ruxsat yo'q.") };
+  if (!clickEnabled()) return { error: t("Click orqali to'lov hozircha yoqilmagan.") };
+
+  const clientId = String(formData.get("clientId") ?? "");
+  const amount = Math.round(Number(String(formData.get("amount") ?? "").replace(/[^\d]/g, "")));
+  if (!Number.isFinite(amount) || amount < CLICK_MIN || amount > CLICK_MAX) {
+    return {
+      error: t("Summa {min} dan {max} gacha bo'lsin.", {
+        min: t.money(CLICK_MIN),
+        max: t.money(CLICK_MAX),
+      }),
+    };
+  }
+
+  const client = await prisma.client.findUnique({
+    where: { id: clientId },
+    select: { id: true, parentUserId: true, branchId: true, branch: { select: { isSolo: true } } },
+  });
+  // Begona bolaga to'lov boshlab bo'lmaydi
+  if (!client || client.parentUserId !== user.id) return { error: t("Mijoz topilmadi.") };
+  if (client.branch.isSolo) return { error: t("Click orqali to'lov hozircha yoqilmagan.") };
+
+  const tx = await prisma.clickTransaction.create({
+    data: { clientId: client.id, branchId: client.branchId, amount },
+    select: { id: true },
+  });
+  const url = clickPayUrl(tx.id, amount);
+  if (!url) return { error: t("Click orqali to'lov hozircha yoqilmagan.") };
+  return { url };
+}

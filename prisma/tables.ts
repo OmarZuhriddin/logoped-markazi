@@ -16,6 +16,7 @@ export const TABLES = [
   { name: "Package", delegate: "package" },
   { name: "Session", delegate: "session" },
   { name: "Payment", delegate: "payment" },
+  { name: "ClickTransaction", delegate: "clickTransaction" },
   { name: "Intake", delegate: "intake" },
   { name: "SalaryPayout", delegate: "salaryPayout" },
   { name: "LinkCode", delegate: "linkCode" },

@@ -98,6 +98,7 @@ export const PAYMENT_METHODS = {
   CASH: "Naqd",
   UZCARD: "Uzcard",
   HUMO: "Humo",
+  CLICK: "Click",
   // Uzcard/Humo qo'shilishidan oldingi yozuvlar "Karta" edi — ular o'z nomi bilan qoladi
   CARD: "Boshqa karta",
   TRANSFER: "O'tkazma",
@@ -105,6 +106,10 @@ export const PAYMENT_METHODS = {
 
 export type PaymentMethod = keyof typeof PAYMENT_METHODS;
 export const PAYMENT_METHOD_KEYS = Object.keys(PAYMENT_METHODS) as PaymentMethod[];
+
+/** Click orqali bir martalik to'lov chegarasi, so'mda */
+export const CLICK_MIN = 1000;
+export const CLICK_MAX = 50_000_000;
 
 /**
  * Ota-ona mashg'ulotni Mini App'dan necha soat oldin bekor qila oladi.

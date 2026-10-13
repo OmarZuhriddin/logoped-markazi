@@ -264,6 +264,31 @@ yangilab bo'lmaydi — yangi ilova sifatida qaytadan tarqatishga to'g'ri keladi.
 APK'ni mutaxassislarga Telegram orqali yuborasiz; o'rnatishda Android
 "noma'lum manbadan o'rnatish"ga ruxsat so'raydi.
 
+## Click orqali onlayn to'lov
+
+Ota-ona kabinetida ("To'lovlar" bo'limi) "Click orqali to'lash" bloki chiqadi:
+summa yoziladi va Click sahifasi ochiladi (Uzcard / Humo kartasi bilan). Pul
+Click tasdiqlagandan keyin avtomatik "To'lovlar" ga **Click** usuli bilan
+yoziladi va ota-onaning qoldig'i yangilanadi. Yakka logopedning mijozlarida
+bu blok yo'q: Click hisobi markazniki.
+
+1. [Click](https://click.uz) bilan **SHOP-API** (merchant) shartnomasi tuzing.
+   Click sizga `service_id`, `merchant_id` va `SECRET_KEY` beradi.
+2. Click merchant kabinetida **Prepare URL** va **Complete URL** ga ikkalasiga
+   ham bitta manzilni yozing: `https://<sayt>/api/click`
+3. Vercel → **Settings → Environment Variables** ga qo'shing va qayta deploy qiling:
+
+| Nomi | Qiymati |
+|---|---|
+| `CLICK_SERVICE_ID` | Click bergan `service_id` |
+| `CLICK_MERCHANT_ID` | Click bergan `merchant_id` |
+| `CLICK_SECRET_KEY` | Click bergan `SECRET_KEY` (hech kimga bermang) |
+
+Uchalasi ham yozilmaguncha Click o'chiq: kabinetda blok ko'rinmaydi, `/api/click`
+esa so'rovni rad etadi. Avval Click'ning sinov (test) rejimida bitta to'lovni
+sinab ko'ring. Sinov: `node tests/click.mjs` (server va test bir xil `CLICK_*`
+bilan ishlashi kerak).
+
 ## Vaqt zonasi (bir martalik)
 
 Markaz Toshkent vaqtida, Vercel'dagi server esa UTC da ishlaydi. Dastur

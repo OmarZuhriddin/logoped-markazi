@@ -25,7 +25,7 @@ pg.types.setTypeParser(1114, (value) => new Date(`${value.replace(" ", "T")}Z`))
 
 const IDENTIFIERS = [
   // jadvallar
-  "SalaryPayout", "ClientService", "SessionType", "Notification", "Assignment", "Specialist", "Payment",
+  "SalaryPayout", "ClientService", "SessionType", "Notification", "Assignment", "Specialist", "Payment", "ClickTransaction",
   "Package", "Session", "Client", "Branch", "User", "LinkCode", "Intake", "Settings",
   // ustunlar va taxalluslar
   "telegramUsername", "pricePerSession", "parentUserId", "totalSessions",
@@ -36,7 +36,7 @@ const IDENTIFIERS = [
   "defaultSalaryPercent", "workStartHour", "workEndHour", "slotMinutes",
   "defaultPrice", "workDays", "centerName", "timezoneShiftedAt", "soloInviteCode", "isSolo", "logoMime", "logoData", "logoUpdatedAt",
   "userId", "paidAt", "sentAt", "durationMin", "sessionTypeId", "brandName",
-  "lunchStartMin", "lunchEndMin", "sheetsUrl", "sheetsSyncedAt", "sheetsError", "sheetsDirtyAt", "sheetsLockAt",
+  "clickTransId", "paymentId", "updatedAt", "lunchStartMin", "lunchEndMin", "sheetsUrl", "sheetsSyncedAt", "sheetsError", "sheetsDirtyAt", "sheetsLockAt",
 ].sort((a, b) => b.length - a.length);
 
 const IDENT_RE = new RegExp(`\\b(${IDENTIFIERS.join("|")})\\b`, "g");

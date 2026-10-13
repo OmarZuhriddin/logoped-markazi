@@ -53,6 +53,7 @@ model Branch {
   clients     Client[]
   sessions    Session[]
   payments    Payment[]
+  clickTransactions    ClickTransaction[]
   payouts     SalaryPayout[]
   intakes     Intake[]
   sessionTypes SessionType[]
@@ -142,6 +143,7 @@ model Client {
   packages      Package[]
   sessions      Session[]
   payments      Payment[]
+  clickTransactions      ClickTransaction[]
   notifications Notification[]
   services      ClientService[]
   intake        Intake?
@@ -322,6 +324,25 @@ model Payment {
   package Package? @relation(fields: [packageId], references: [id])
 
   @@index([branchId, paidAt])
+  @@index([clientId])
+}
+
+/// Click orqali onlayn to'lov urinishi. id — Click'ga beriladigan
+/// merchant_trans_id (va merchant_prepare_id). status: PENDING | PREPARED | PAID | CANCELLED
+model ClickTransaction {
+  id           Int      @id @default(autoincrement())
+  clientId     String
+  branchId     String
+  amount       Int
+  status       String   @default("PENDING")
+  clickTransId String?
+  paymentId    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  branch Branch @relation(fields: [branchId], references: [id])
+
   @@index([clientId])
 }
 
