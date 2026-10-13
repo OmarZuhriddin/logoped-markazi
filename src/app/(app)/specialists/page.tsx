@@ -3,7 +3,7 @@ import { TableTools } from "@/components/table-tools";
 import { requireRole, NOT_SOLO, branchWhere } from "@/lib/auth";
 import { getSettings } from "@/lib/settings";
 import { prisma } from "@/lib/prisma";
-import { SPECIALIZATIONS, SPECIALIZATION_KEYS, type Specialization, specLabel } from "@/lib/constants";
+import { PAYMENT_METHODS, PAYMENT_METHOD_KEYS, specLabel } from "@/lib/constants";
 import { getSpecialistBalances, getSpecialistRows, monthRange } from "@/lib/stats";
 import { dateShort, toDateInput } from "@/lib/format";
 import {
@@ -344,9 +344,11 @@ export default async function SpecialistsPage() {
                         className="rounded-md border border-slate-300 px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-950"
                         aria-label={t("To'lov usuli")}
                       >
-                        <option value="CASH">{t("Naqd")}</option>
-                        <option value="CARD">{t("Karta")}</option>
-                        <option value="TRANSFER">{t("O'tkazma")}</option>
+                        {PAYMENT_METHOD_KEYS.map((m) => (
+                          <option key={m} value={m}>
+                            {t(PAYMENT_METHODS[m])}
+                          </option>
+                        ))}
                       </select>
                       <button type="submit" className="text-xs font-semibold text-indigo-600 hover:underline">
                         {t("to'lash")}

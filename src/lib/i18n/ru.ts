@@ -792,4 +792,7 @@ export const ru: Record<string, string> = {
   "Seans yozildi: {name} · {when}. Diqqat: mijoz {debt} qarzga kirdi.": "Занятие записано: {name} · {when}. Внимание: у клиента долг {debt}.",
   "Mijozning puli yetmaydi.\nQoldiq (rejadagi seanslarni hisobga olganda): {balance}\nYangi seans narxi: {price}\nBaribir yozsangiz, mijoz {debt} qarzga kiradi.\n\nBaribir yozilsinmi?": "Клиенту не хватает денег.\nОстаток (с учётом запланированных занятий): {balance}\nЦена нового занятия: {price}\nЕсли записать всё равно, клиент будет должен {debt}.\n\nЗаписать всё равно?",
   "Seans vaqti hali boshlanmagan.": "Время занятия ещё не наступило.",
+  "Uzcard": "Uzcard",
+  "Humo": "Humo",
+  "Boshqa karta": "Другая карта",
 };

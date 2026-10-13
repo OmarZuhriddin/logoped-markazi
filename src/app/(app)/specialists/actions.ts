@@ -6,7 +6,7 @@ import { withFlash } from "@/lib/action";
 import { setFlash } from "@/lib/flash";
 import { prisma } from "@/lib/prisma";
 import { hashPassword, requireUser, type CurrentUser } from "@/lib/auth";
-import { normalizeSpecialization } from "@/lib/constants";
+import { PAYMENT_METHOD_KEYS, normalizeSpecialization } from "@/lib/constants";
 
 async function requireAdmin(): Promise<CurrentUser> {
   const user = await requireUser();
@@ -201,7 +201,7 @@ async function paySalaryImpl(formData: FormData) {
   if (!Number.isFinite(amount) || amount <= 0) throw new Error("Summa to'g'ri kiritilmagan.");
 
   const method = String(formData.get("method") ?? "CASH");
-  if (!["CASH", "CARD", "TRANSFER"].includes(method)) throw new Error("To'lov usuli noto'g'ri.");
+  if (!(PAYMENT_METHOD_KEYS as string[]).includes(method)) throw new Error("To'lov usuli noto'g'ri.");
 
   const sp = await prisma.specialist.findUnique({
     where: { id: specialistId },

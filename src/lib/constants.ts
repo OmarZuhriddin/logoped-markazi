@@ -96,7 +96,10 @@ export const BILLING_TYPE_KEYS = Object.keys(BILLING_TYPES) as BillingType[];
 /** To'lov usullari */
 export const PAYMENT_METHODS = {
   CASH: "Naqd",
-  CARD: "Karta",
+  UZCARD: "Uzcard",
+  HUMO: "Humo",
+  // Uzcard/Humo qo'shilishidan oldingi yozuvlar "Karta" edi — ular o'z nomi bilan qoladi
+  CARD: "Boshqa karta",
   TRANSFER: "O'tkazma",
 } as const;
 
