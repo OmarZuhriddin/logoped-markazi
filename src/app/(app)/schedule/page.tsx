@@ -3,7 +3,7 @@ import { CheckedSubmit } from "@/components/checked-submit";
 import { DateField } from "@/components/date-field";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { requireUser, sessionScope, clientScope, NOT_SOLO } from "@/lib/auth";
+import { requireUser, sessionScope, clientScope, NOT_SOLO, isSolo } from "@/lib/auth";
 import {
   SESSION_STATUSES,
   SESSION_STATUS_STYLE,
@@ -45,6 +45,11 @@ export default async function SchedulePage({
   const { from, to } = weekRange(base);
 
   const canEdit = user.role !== "PARENT";
+  // Markazdagi mutaxassis seans yozmaydi — jadvalni qabulxona/rahbar tuzadi.
+  // Yakka mutaxassis o'ziga o'zi rahbar, u yozadi.
+  const canCreate = canEdit && (user.role !== "SPECIALIST" || isSolo(user));
+  // "O'tdi"/"Kelmadi" faqat seans vaqti boshlangach
+  const now = new Date();
   const branchFilter =
     user.role === "OWNER" ? (sp.b || null) : user.branchId;
   const specialistFilter =
@@ -205,7 +210,7 @@ export default async function SchedulePage({
         </form>
       ) : null}
 
-      {canEdit && clients.length > 0 ? (
+      {canCreate && clients.length > 0 ? (
         <details id="yangi" data-autoclose open={Boolean(sp.yangi)} className={`${card} mb-5 p-4`}>
           <summary className="cursor-pointer text-sm font-semibold text-slate-800 dark:text-slate-200">
             + {t("Yangi seans qo'shish")}
@@ -395,8 +400,12 @@ export default async function SchedulePage({
                         <div className="flex flex-wrap items-center gap-1.5">
                           {s.status === "PLANNED" ? (
                             <>
-                              <StatusButton id={s.id} status="DONE" title={t("O'tdi")} tone="good" />
-                              <StatusButton id={s.id} status="NO_SHOW" title={t("Kelmadi")} tone="bad" />
+                              {s.startsAt <= now ? (
+                                <>
+                                  <StatusButton id={s.id} status="DONE" title={t("O'tdi")} tone="good" />
+                                  <StatusButton id={s.id} status="NO_SHOW" title={t("Kelmadi")} tone="bad" />
+                                </>
+                              ) : null}
                               <StatusButton
                                 id={s.id}
                                 status="CANCELLED_CLIENT"
