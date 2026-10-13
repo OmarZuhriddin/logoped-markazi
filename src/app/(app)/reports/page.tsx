@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TableTools } from "@/components/table-tools";
 import { prisma } from "@/lib/prisma";
 import { requireManager, NOT_SOLO, branchWhere, isSolo } from "@/lib/auth";
 import {
@@ -153,7 +154,7 @@ export default async function ReportsPage({
 
       {branchStats.length > 0 ? (
         <Card title={t("Filiallar kesimi")} className="mt-5">
-          <div className="scroll-x">
+          <TableTools>
             <table className="w-full min-w-[820px]">
               <thead className="border-b border-slate-200 dark:border-slate-800">
                 <tr>
@@ -186,7 +187,7 @@ export default async function ReportsPage({
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableTools>
         </Card>
       ) : null}
 
@@ -197,7 +198,7 @@ export default async function ReportsPage({
           {specialistRows.length === 0 ? (
             <Empty>{t("Ma'lumot yo'q.")}</Empty>
           ) : (
-            <div className="scroll-x">
+            <TableTools>
               <table className="w-full min-w-[520px]">
                 <thead className="border-b border-slate-200 dark:border-slate-800">
                   <tr>
@@ -224,7 +225,7 @@ export default async function ReportsPage({
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableTools>
           )}
         </Card>
 

@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { TableTools } from "@/components/table-tools";
 import { DateField } from "@/components/date-field";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -235,7 +236,7 @@ export default async function IntakesPage({
         {intakes.length === 0 ? (
           <Empty>{t("Bu oyda qabul yozilmagan.")}</Empty>
         ) : (
-          <div className="scroll-x">
+          <TableTools>
             <table className="w-full min-w-[1080px]">
               <thead className="border-b border-slate-200 dark:border-slate-800">
                 <tr>
@@ -502,7 +503,7 @@ export default async function IntakesPage({
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableTools>
         )}
       </Card>
     </>

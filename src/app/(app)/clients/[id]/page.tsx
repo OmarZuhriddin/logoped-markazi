@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TableTools } from "@/components/table-tools";
 import { DateField } from "@/components/date-field";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -179,7 +180,7 @@ export default async function ClientPage({
             {client.sessions.length === 0 ? (
               <Empty>{t("Seans yo'q.")}</Empty>
             ) : (
-              <div className="scroll-x">
+              <TableTools>
                 <table className="w-full min-w-[620px]">
                   <thead className="border-b border-slate-200 dark:border-slate-800">
                     <tr>
@@ -213,7 +214,7 @@ export default async function ClientPage({
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </TableTools>
             )}
           </Card>
 
@@ -222,7 +223,7 @@ export default async function ClientPage({
               {client.payments.length === 0 ? (
                 <Empty>{t("To'lov yo'q.")}</Empty>
               ) : (
-                <div className="scroll-x">
+                <TableTools>
                   <table className="w-full min-w-[560px]">
                     <thead className="border-b border-slate-200 dark:border-slate-800">
                       <tr>
@@ -258,7 +259,7 @@ export default async function ClientPage({
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </TableTools>
               )}
 
               {canManage ? (

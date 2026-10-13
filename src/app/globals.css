@@ -84,6 +84,14 @@ html:not(.dark) body {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Jadval sarlavhasi bosilganda tartiblanadi (`TableTools`). Belgi shu yerda
+   chiziladi: React'ga tegishli sarlavha ichiga element qo'shilmaydi. */
+th[data-sortable] { cursor: pointer; user-select: none; }
+th[data-sortable]:hover { color: var(--color-slate-800, #1e293b); }
+th[data-sortable]::after { content: " ↕"; opacity: 0.3; }
+th[data-sort="asc"]::after { content: " ▲"; opacity: 1; color: #6366f1; }
+th[data-sort="desc"]::after { content: " ▼"; opacity: 1; color: #6366f1; }
+
 /* ---- Telefon kabineti (mutaxassis va ota-ona) ----
    Ranglar Telegram mavzusidan (--tg-theme-*) OLINMAYDI: Telegram ularni
    o'zi qo'yib yuboradi va kabinetdagi tun/kun tugmasi ishlamay qolardi

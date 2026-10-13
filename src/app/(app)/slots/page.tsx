@@ -1,4 +1,5 @@
 import { getSessionTypes } from "@/lib/session-types";
+import { TableTools } from "@/components/table-tools";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireRole, NOT_SOLO, branchWhere, isSolo } from "@/lib/auth";
@@ -176,7 +177,7 @@ export default async function SlotsPage({
         {specialists.length === 0 ? (
           <Empty>{t("Mutaxassis yo'q. Avval Xodimlar bo'limidan qo'shing.")}</Empty>
         ) : (
-          <div className="scroll-x">
+          <TableTools>
             <table className="w-full min-w-[880px]">
               <thead className="border-b border-slate-200 dark:border-slate-800">
                 <tr>
@@ -236,7 +237,7 @@ export default async function SlotsPage({
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableTools>
         )}
         <p className="border-t border-slate-200 px-4 py-3 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
           {t("Raqam — o'sha kundagi bo'sh vaqtlar soni. Raqamni bosib vaqtni tanlang. O'tib ketgan vaqtlar sanalmaydi.")}

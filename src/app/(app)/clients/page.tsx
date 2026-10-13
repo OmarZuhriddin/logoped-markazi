@@ -1,4 +1,5 @@
 import { getSessionTypes } from "@/lib/session-types";
+import { TableTools } from "@/components/table-tools";
 import { DateField } from "@/components/date-field";
 import { Fragment } from "react";
 import Link from "next/link";
@@ -298,7 +299,7 @@ export default async function ClientsPage({
         {clients.length === 0 && !hasFilter ? (
           <Empty>{t("Hali mijoz qo'shilmagan.")}</Empty>
         ) : (
-          <div className="scroll-x">
+          <TableTools>
             <table className="w-full min-w-[1000px]">
               <thead className="border-b border-slate-200 dark:border-slate-800">
                 <tr>
@@ -460,7 +461,7 @@ export default async function ClientsPage({
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableTools>
         )}
       </Card>
 
