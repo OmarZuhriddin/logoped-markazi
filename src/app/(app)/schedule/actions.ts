@@ -2,7 +2,7 @@
 
 import { parseDateInput } from "@/lib/format";
 import { revalidatePath } from "next/cache";
-import { withFlash } from "@/lib/action";
+import { ActionError, withFlash } from "@/lib/action";
 import { setFlash } from "@/lib/flash";
 import { dateTimeUz } from "@/lib/format";
 import { after } from "next/server";
@@ -12,6 +12,8 @@ import { SESSION_STATUS_KEYS, type SessionStatus } from "@/lib/constants";
 import { queueSessionDone, sendPending } from "@/lib/notify";
 import { getSettings } from "@/lib/settings";
 import { assertTypeFitsBranch } from "@/lib/session-types";
+import { sessionBalance } from "@/lib/session-balance";
+import { getT } from "@/lib/i18n/server";
 
 /** Seansni o'zgartirishga ruxsat bormi? */
 async function assertCanEdit(sessionId: string) {
@@ -164,19 +166,25 @@ async function createSessionImpl(formData: FormData) {
   // Begona (boshqa markaz yoki yakka logoped) xizmati bilan narx qo'yib bo'lmasin
   await assertTypeFitsBranch(sessionTypeId, client.branchId);
 
-  // Shu vaqtda mutaxassis band emasmi?
+  // Shu vaqtda mutaxassis yoki mijoz band emasmi? findFirst emas, findMany:
+  // birinchi topilgani tugab bo'lgan seans bo'lsa, ustma-ust tushganini o'tkazib yuborardi.
   const end = new Date(startsAt.getTime() + durationMin * 60_000);
-  const clash = await prisma.session.findFirst({
+  const nearby = await prisma.session.findMany({
     where: {
-      specialistId,
+      OR: [{ specialistId }, { clientId }],
       status: { in: ["PLANNED", "DONE"] },
-      startsAt: { gte: new Date(startsAt.getTime() - 3 * 60 * 60_000), lt: end },
+      startsAt: { gte: new Date(startsAt.getTime() - 12 * 60 * 60_000), lt: end },
     },
-    select: { startsAt: true, durationMin: true },
+    select: { specialistId: true, clientId: true, startsAt: true, durationMin: true },
   });
-  if (clash) {
-    const clashEnd = new Date(clash.startsAt.getTime() + clash.durationMin * 60_000);
-    if (clashEnd > startsAt) throw new Error("Mutaxassisning bu vaqti band.");
+  const overlaps = nearby.filter(
+    (x) => new Date(x.startsAt.getTime() + x.durationMin * 60_000) > startsAt,
+  );
+  if (overlaps.some((x) => x.specialistId === specialistId)) {
+    throw new Error("Mutaxassisning bu vaqti band.");
+  }
+  if (overlaps.some((x) => x.clientId === clientId)) {
+    throw new Error("Mijozning bu vaqtda boshqa seansi bor.");
   }
 
   // Seans shu xizmatning faol abonementidan yechiladi. Xizmatlar kiritilishidan
@@ -193,6 +201,21 @@ async function createSessionImpl(formData: FormData) {
       orderBy: { purchasedAt: "desc" },
       select: { id: true },
     }));
+
+  // Pul yetmasa avval ogohlantiriladi; mijoz baribir yozilsa, qarzga kirgani aytiladi
+  const type = await prisma.sessionType.findUnique({ where: { id: sessionTypeId }, select: { price: true } });
+  const pkgPrice = pkg
+    ? (await prisma.package.findUnique({ where: { id: pkg.id }, select: { pricePerSession: true } }))?.pricePerSession
+    : undefined;
+  const check = await sessionBalance(clientId, pkgPrice ?? type?.price ?? 0);
+  const allowDebt = String(formData.get("allowDebt") ?? "") === "1";
+  const tt = await getT();
+  if (check.short && !allowDebt) {
+    throw new ActionError(
+      "Mijozning puli yetmaydi: qoldiq {balance}, seans narxi {price}. Baribir yozish uchun tasdiqlang.",
+      { balance: tt.money(check.balance), price: tt.money(check.price) },
+    );
+  }
 
   await prisma.session.create({
     data: {
@@ -228,10 +251,67 @@ async function createSessionImpl(formData: FormData) {
   revalidatePath(`/clients/${clientId}`);
   // Yashil xabar qo'shish oynasini yopadi (AutoCloseEdits) — seans boshqa
   // haftaga yozilgan bo'lsa ham bajarilgani bilinsin
-  await setFlash("Seans yozildi: {name} · {when}", "ok", {
-    name: client.fullName,
-    when: dateTimeUz(startsAt),
+  if (check.short) {
+    await setFlash("Seans yozildi: {name} · {when}. Diqqat: mijoz {debt} qarzga kirdi.", "ok", {
+      name: client.fullName,
+      when: dateTimeUz(startsAt),
+      debt: tt.money(check.debtAfter),
+    });
+  } else {
+    await setFlash("Seans yozildi: {name} · {when}", "ok", {
+      name: client.fullName,
+      when: dateTimeUz(startsAt),
+    });
+  }
+}
+
+/**
+ * Forma yuborilishidan oldin brauzer chaqiradi: mijozning puli yetmasa
+ * ogohlantirish matnini qaytaradi (null — hammasi joyida). Matn
+ * foydalanuvchining tilida, pul so'm/UZS/сум bilan.
+ */
+export async function checkSessionBalance(formData: FormData): Promise<{ message: string | null }> {
+  const user = await requireUser();
+  if (user.role === "PARENT") return { message: null };
+  const clientId = String(formData.get("clientId") ?? "");
+  if (!clientId) return { message: null };
+  const client = await prisma.client.findUnique({
+    where: { id: clientId },
+    select: { id: true, branchId: true },
   });
+  if (!client) return { message: null };
+  if (user.role !== "OWNER" && user.role !== "SPECIALIST" && client.branchId !== user.branchId) {
+    return { message: null };
+  }
+
+  let sessionTypeId = String(formData.get("sessionTypeId") ?? "") || null;
+  if (!sessionTypeId) {
+    const own = await prisma.clientService.findMany({
+      where: { clientId, sessionType: { isActive: true } },
+      select: { sessionTypeId: true },
+    });
+    // Xizmat aniq emas bo'lsa narx ham noma'lum — xatoni yozish amalining o'zi aytadi
+    if (own.length !== 1) return { message: null };
+    sessionTypeId = own[0].sessionTypeId;
+  }
+  const [type, pkg] = await Promise.all([
+    prisma.sessionType.findUnique({ where: { id: sessionTypeId }, select: { price: true } }),
+    prisma.package.findFirst({
+      where: { clientId, sessionTypeId, isActive: true },
+      orderBy: { purchasedAt: "desc" },
+      select: { pricePerSession: true },
+    }),
+  ]);
+  const check = await sessionBalance(clientId, pkg?.pricePerSession ?? type?.price ?? 0);
+  if (!check.short) return { message: null };
+
+  const t = await getT();
+  return {
+    message: t(
+      "Mijozning puli yetmaydi.\nQoldiq (rejadagi seanslarni hisobga olganda): {balance}\nYangi seans narxi: {price}\nBaribir yozsangiz, mijoz {debt} qarzga kiradi.\n\nBaribir yozilsinmi?",
+      { balance: t.money(check.balance), price: t.money(check.price), debt: t.money(check.debtAfter) },
+    ),
+  };
 }
 
 /** Seansni o'chirish (faqat rejadagisini) */

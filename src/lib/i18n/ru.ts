@@ -787,4 +787,8 @@ export const ru: Record<string, string> = {
   "Masalan: Logoped": "Например: Логопед",
   "Mutaxassislikni yozing.": "Укажите специальность.",
   "Mutaxassislik 60 belgidan oshmasin.": "Специальность — не более 60 символов.",
+  "Mijozning bu vaqtda boshqa seansi bor.": "У клиента в это время уже есть другое занятие.",
+  "Mijozning puli yetmaydi: qoldiq {balance}, seans narxi {price}. Baribir yozish uchun tasdiqlang.": "Клиенту не хватает денег: остаток {balance}, цена занятия {price}. Подтвердите, чтобы записать всё равно.",
+  "Seans yozildi: {name} · {when}. Diqqat: mijoz {debt} qarzga kirdi.": "Занятие записано: {name} · {when}. Внимание: у клиента долг {debt}.",
+  "Mijozning puli yetmaydi.\nQoldiq (rejadagi seanslarni hisobga olganda): {balance}\nYangi seans narxi: {price}\nBaribir yozsangiz, mijoz {debt} qarzga kiradi.\n\nBaribir yozilsinmi?": "Клиенту не хватает денег.\nОстаток (с учётом запланированных занятий): {balance}\nЦена нового занятия: {price}\nЕсли записать всё равно, клиент будет должен {debt}.\n\nЗаписать всё равно?",
 };
