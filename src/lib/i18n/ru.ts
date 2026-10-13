@@ -784,4 +784,7 @@ export const ru: Record<string, string> = {
   "Soat": "Час",
   "Daqiqa": "Минута",
   "OK": "ОК",
+  "Masalan: Logoped": "Например: Логопед",
+  "Mutaxassislikni yozing.": "Укажите специальность.",
+  "Mutaxassislik 60 belgidan oshmasin.": "Специальность — не более 60 символов.",
 };

@@ -17,6 +17,7 @@ import {
   type PaymentMethod,
   type SessionStatus,
   type Specialization,
+  specLabel,
 } from "@/lib/constants";
 import { dateShort, dateTimeUz, timeUz, toDateInput } from "@/lib/format";
 import {
@@ -197,7 +198,7 @@ export default async function ClientPage({
                         <td className={td}>
                           {s.specialist.user.fullName}
                           <span className="block text-xs text-slate-400">
-                            {s.sessionType?.name ?? t(SPECIALIZATIONS[s.specialist.specialization as Specialization])}
+                            {s.sessionType?.name ?? t(specLabel(s.specialist.specialization))}
                           </span>
                         </td>
                         <td className={td}>
@@ -421,7 +422,7 @@ export default async function ClientPage({
                         {a.specialist.user.fullName}
                       </p>
                       <p className="truncate text-xs text-slate-400">
-                        {t(SPECIALIZATIONS[a.specialist.specialization as Specialization])}
+                        {t(specLabel(a.specialist.specialization))}
                       </p>
                     </div>
                     {canManage ? (
@@ -455,7 +456,7 @@ export default async function ClientPage({
                   <select id="specialistId" name="specialistId" className={input} required>
                     {freeSpecialists.map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.user.fullName} — {t(SPECIALIZATIONS[s.specialization as Specialization])}
+                        {s.user.fullName} — {t(specLabel(s.specialization))}
                       </option>
                     ))}
                   </select>

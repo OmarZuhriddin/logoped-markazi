@@ -1894,7 +1894,7 @@ if (await payRow.count()) {
 
   await form.locator('input[name="fullName"]').fill(`${target.fullName} (tahrir)`);
   await form.locator('input[name="phone"]').fill(newPhone);
-  await form.locator('select[name="specialization"]').selectOption("LOGOPED");
+  await form.locator('input[name="specialization"]').fill("Logoped-defektolog");
   // Ulush endi xizmatda — xodim formasida yo'q va tahrirlashda o'zgarmaydi
   check("Xodim formasida ulush maydoni yo'q", (await form.locator('input[name="salaryPercent"]').count()) === 0);
   await form.locator('button:has-text("Saqlash")').click();
@@ -1946,7 +1946,7 @@ if (await payRow.count()) {
   await back.locator("summary").click();
   await back.locator('input[name="fullName"]').fill(target.fullName);
   await back.locator('input[name="phone"]').fill(target.phone);
-  await back.locator('select[name="specialization"]').selectOption(target.specialization);
+  await back.locator('input[name="specialization"]').fill(target.specialization);
   await back.locator('button:has-text("Saqlash")').click();
   const restored = await waitUntil(async () => {
     const r = await one(

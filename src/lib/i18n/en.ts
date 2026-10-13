@@ -784,4 +784,7 @@ export const en: Record<string, string> = {
   "Soat": "Hour",
   "Daqiqa": "Minute",
   "OK": "OK",
+  "Masalan: Logoped": "E.g. Speech therapist",
+  "Mutaxassislikni yozing.": "Enter the specialty.",
+  "Mutaxassislik 60 belgidan oshmasin.": "The specialty must be at most 60 characters.",
 };

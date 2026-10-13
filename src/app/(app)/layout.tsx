@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { requireUser, isSolo } from "@/lib/auth";
-import { ROLES, SPECIALIZATIONS, type Specialization } from "@/lib/constants";
+import { ROLES, SPECIALIZATIONS, type Specialization, specLabel } from "@/lib/constants";
 import { MobileNav, SideNav, type NavItem } from "@/components/nav";
 import { Flash } from "@/components/flash";
 import { AutoCloseEdits } from "@/components/auto-close";
@@ -77,7 +77,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const roleLine =
     user.role === "SPECIALIST" && user.specialization
-      ? t(SPECIALIZATIONS[user.specialization as Specialization])
+      ? t(specLabel(user.specialization))
       : t(ROLES[user.role]);
 
   return (

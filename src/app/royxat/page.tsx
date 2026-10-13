@@ -7,7 +7,7 @@ import { BrandMark } from "@/components/brand";
 import { Flash } from "@/components/flash";
 import { I18nProvider } from "@/components/i18n";
 import { LanguageSwitcher, ThemeToggle } from "@/components/prefs";
-import { SPECIALIZATIONS, SPECIALIZATION_KEYS, type Specialization } from "@/lib/constants";
+import { SPECIALIZATIONS, SPECIALIZATION_KEYS, type Specialization, specLabel } from "@/lib/constants";
 import { getSettings } from "@/lib/settings";
 import { dictFor } from "@/lib/i18n/dicts";
 import { getT } from "@/lib/i18n/server";
@@ -87,7 +87,7 @@ export default async function RegisterPage() {
               <select id="specialization" name="specialization" className={input} required>
                 {SPECIALIZATION_KEYS.map((k) => (
                   <option key={k} value={k}>
-                    {t(SPECIALIZATIONS[k as Specialization])}
+                    {t(specLabel(k))}
                   </option>
                 ))}
               </select>

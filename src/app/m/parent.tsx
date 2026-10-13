@@ -9,6 +9,7 @@ import {
   type PaymentMethod,
   type SessionStatus,
   type Specialization,
+  specLabel,
 } from "@/lib/constants";
 import { cancelByParent } from "./parent-actions";
 import { TgLink } from "./tg-link";
@@ -187,7 +188,7 @@ export async function ParentApp({
             </p>
             <p className="text-sm">
               {dateShort(next.startsAt)} ·{" "}
-              {t(SPECIALIZATIONS[next.specialist.specialization as Specialization])}
+              {t(specLabel(next.specialist.specialization))}
             </p>
             <p className="text-xs app-muted">
               {next.specialist.user.fullName} · {t("{n} daqiqa", { n: next.durationMin })}
@@ -248,7 +249,7 @@ export async function ParentApp({
                   <li key={sp.id} className="flex items-center justify-between gap-2 text-sm">
                     <span className="truncate font-medium">{sp.user.fullName}</span>
                     <span className="shrink-0 text-xs app-muted">
-                      {t(SPECIALIZATIONS[sp.specialization as Specialization])}
+                      {t(specLabel(sp.specialization))}
                     </span>
                   </li>
                 ))}
@@ -276,7 +277,7 @@ export async function ParentApp({
                   </div>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">
-                      {t(SPECIALIZATIONS[s.specialist.specialization as Specialization])}
+                      {t(specLabel(s.specialist.specialization))}
                     </p>
                     <p className="truncate text-xs app-muted">
                       {s.specialist.user.fullName} · {t.weekday(s.startsAt)}
@@ -331,7 +332,7 @@ export async function ParentApp({
               <li key={s.id} className="app-card flex items-center justify-between gap-3 p-3">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium">
-                    {t(SPECIALIZATIONS[s.specialist.specialization as Specialization])}
+                    {t(specLabel(s.specialist.specialization))}
                   </p>
                   <p className="text-xs app-muted">
                     {dateShort(s.startsAt)} {timeUz(s.startsAt)} · {s.specialist.user.fullName}
@@ -411,7 +412,7 @@ export async function ParentApp({
               <li key={sp.id} className="app-card p-3" data-testid="parent-specialist">
                 <p className="text-sm font-semibold">{sp.user.fullName}</p>
                 <p className="text-xs app-muted">
-                  {t(SPECIALIZATIONS[sp.specialization as Specialization])}
+                  {t(specLabel(sp.specialization))}
                 </p>
                 <div className="mt-2.5 flex gap-2">
                   <a

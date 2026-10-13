@@ -9,6 +9,7 @@ import {
   SPECIALIZATIONS,
   type SessionStatus,
   type Specialization,
+  specLabel,
 } from "@/lib/constants";
 import { addDays, weekRange } from "@/lib/stats";
 import { dateShort, timeUz } from "@/lib/format";
@@ -98,7 +99,7 @@ export default async function SchedulePage({
       ? [{ id: user.specialistId!, name: `${user.fullName} (${t("men")})`, branchName: "" }]
       : specialists.map((s) => ({
           id: s.id,
-          name: `${s.user.fullName} — ${t(SPECIALIZATIONS[s.specialization as Specialization])}`,
+          name: `${s.user.fullName} — ${t(specLabel(s.specialization))}`,
           branchName: s.branch.name,
         }));
 
@@ -191,7 +192,7 @@ export default async function SchedulePage({
                 <option value="">{t("Barchasi")}</option>
                 {specialists.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.user.fullName} — {t(SPECIALIZATIONS[s.specialization as Specialization])}
+                    {s.user.fullName} — {t(specLabel(s.specialization))}
                   </option>
                 ))}
               </select>
@@ -367,7 +368,7 @@ export default async function SchedulePage({
                         </Link>
                         <p className="text-xs text-slate-500 dark:text-slate-400">
                           {s.specialist.user.fullName} ·{" "}
-                          {t(SPECIALIZATIONS[s.specialist.specialization as Specialization])}
+                          {t(specLabel(s.specialist.specialization))}
                           {!branchFilter ? ` · ${s.branch.name}` : ""} · {t("{n} daq.", { n: s.durationMin })}
                         </p>
                         {s.sessionType ? (

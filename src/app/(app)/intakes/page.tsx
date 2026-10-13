@@ -15,6 +15,7 @@ import {
   type IntakeResult,
   type IntakeStatus,
   type Specialization,
+  specLabel,
 } from "@/lib/constants";
 import { monthRange } from "@/lib/stats";
 import { dateShort, num, timeUz, toDateInput, toDateTimeInput } from "@/lib/format";
@@ -200,7 +201,7 @@ export default async function IntakesPage({
             specialists={specialists.map((x) => ({
               id: x.id,
               branchId: x.branchId,
-              label: `${x.user.fullName} · ${t(SPECIALIZATIONS[x.specialization as Specialization])}`,
+              label: `${x.user.fullName} · ${t(specLabel(x.specialization))}`,
             }))}
           />
           )}
@@ -276,7 +277,7 @@ export default async function IntakesPage({
                         <>
                           {i.specialist.user.fullName}
                           <span className="block text-xs text-slate-400">
-                            {t(SPECIALIZATIONS[i.specialist.specialization as Specialization])}
+                            {t(specLabel(i.specialist.specialization))}
                           </span>
                         </>
                       ) : (
@@ -464,7 +465,7 @@ export default async function IntakesPage({
                                 .map((x) => (
                                   <option key={x.id} value={x.id}>
                                     {x.user.fullName} ·{" "}
-                                    {t(SPECIALIZATIONS[x.specialization as Specialization])}
+                                    {t(specLabel(x.specialization))}
                                   </option>
                                 ))}
                             </select>
