@@ -1,4 +1,5 @@
 import { requireRole } from "@/lib/auth";
+import { TableTools } from "@/components/table-tools";
 import { prisma } from "@/lib/prisma";
 import {
   PAYMENT_METHODS,
@@ -73,7 +74,7 @@ export default async function EarningsPage() {
           {sessions.length === 0 ? (
             <Empty>{t("Bu oyda hisobga kirgan seans yo'q.")}</Empty>
           ) : (
-            <div className="scroll-x">
+            <TableTools>
               <table className="w-full min-w-[560px]">
                 <thead className="border-b border-slate-200 dark:border-slate-800">
                   <tr>
@@ -119,7 +120,7 @@ export default async function EarningsPage() {
                   })}
                 </tbody>
               </table>
-            </div>
+            </TableTools>
           )}
         </Card>
 
@@ -127,7 +128,7 @@ export default async function EarningsPage() {
           {payouts.length === 0 ? (
             <Empty>{t("Hali to'lov yozilmagan.")}</Empty>
           ) : (
-            <div className="scroll-x">
+            <TableTools>
               <table className="w-full min-w-[420px]">
                 <thead className="border-b border-slate-200 dark:border-slate-800">
                   <tr>
@@ -150,7 +151,7 @@ export default async function EarningsPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableTools>
           )}
         </Card>
       </div>

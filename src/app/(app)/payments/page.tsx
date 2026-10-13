@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { TableTools } from "@/components/table-tools";
 import { DateField } from "@/components/date-field";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -305,7 +306,7 @@ export default async function PaymentsPage({
           {payments.length === 0 ? (
             <Empty>{t("Bu davrda to'lov yo'q.")}</Empty>
           ) : (
-            <div className="scroll-x">
+            <TableTools>
               <table className="w-full min-w-[720px]">
                 <thead className="border-b border-slate-200 dark:border-slate-800">
                   <tr>
@@ -403,7 +404,7 @@ export default async function PaymentsPage({
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableTools>
           )}
         </Card>
 
@@ -417,7 +418,7 @@ export default async function PaymentsPage({
               </Link>
             }
           >
-            <div className="scroll-x">
+            <TableTools>
               <table className="w-full min-w-[620px]">
                 <thead className="border-b border-slate-200 dark:border-slate-800">
                   <tr>
@@ -448,7 +449,7 @@ export default async function PaymentsPage({
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableTools>
           </Card>
         ) : null}
 

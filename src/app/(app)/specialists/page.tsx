@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { TableTools } from "@/components/table-tools";
 import { requireRole, NOT_SOLO, branchWhere } from "@/lib/auth";
 import { getSettings } from "@/lib/settings";
 import { prisma } from "@/lib/prisma";
@@ -159,7 +160,7 @@ export default async function SpecialistsPage() {
         {rows.length === 0 ? (
           <Empty>{t("Mutaxassis yo'q.")}</Empty>
         ) : (
-          <div className="scroll-x">
+          <TableTools>
             <table className="w-full min-w-[900px]">
               <thead className="border-b border-slate-200 dark:border-slate-800">
                 <tr>
@@ -281,7 +282,7 @@ export default async function SpecialistsPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableTools>
         )}
       </Card>
 
@@ -290,7 +291,7 @@ export default async function SpecialistsPage() {
         subtitle={t("boshidan beri: hisoblangan − to'langan = qolgan")}
         className="mt-5"
       >
-        <div className="scroll-x">
+        <TableTools>
           <table className="w-full min-w-[760px]">
             <thead className="border-b border-slate-200 dark:border-slate-800">
               <tr>
@@ -356,7 +357,7 @@ export default async function SpecialistsPage() {
               ))}
             </tbody>
           </table>
-        </div>
+        </TableTools>
 
         {payouts.length > 0 ? (
           <div className="border-t border-slate-200 px-4 py-3 dark:border-slate-800">

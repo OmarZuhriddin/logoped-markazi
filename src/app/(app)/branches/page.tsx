@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { TableTools } from "@/components/table-tools";
 import { requireRole, NOT_SOLO } from "@/lib/auth";
 import { num } from "@/lib/format";
 import { monthRange } from "@/lib/stats";
@@ -94,7 +95,7 @@ export default async function BranchesPage() {
         {branches.length === 0 ? (
           <Empty>{t("Hali filial qo'shilmagan.")}</Empty>
         ) : (
-          <div className="scroll-x">
+          <TableTools>
             <table className="w-full min-w-[820px]">
               <thead className="border-b border-slate-200 dark:border-slate-800">
                 <tr>
@@ -168,7 +169,7 @@ export default async function BranchesPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableTools>
         )}
       </Card>
 

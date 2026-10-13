@@ -2095,6 +2095,37 @@ if (await payRow.count()) {
   await page.click('summary:has-text("Yangi mutaxassis")');
   check("Yangi mutaxassis formasida ulush so'ralmaydi", (await page.locator("#salaryPercent").count()) === 0);
 
+  // Jadvalda qidiruv va tartiblash
+  {
+    const tbl = page.locator("table:has(th:has-text('Mutaxassis'))").first();
+    const search = page.locator('input[type="search"]').first();
+    const names = () =>
+      tbl.evaluate((el) =>
+        [...el.tBodies[0].rows]
+          .filter((r) => r.cells.length > 1 && !r.hidden)
+          .map((r) => r.cells[0].innerText.split("\n")[0].trim()),
+      );
+    const all = await names();
+    await search.fill("zzzyyyxxx");
+    check(
+      "Jadvaldagi qidiruv mos kelmagan qatorlarni yashiradi",
+      (await names()).length === 0 && (await page.getByText("Hech narsa topilmadi.").first().isVisible()),
+    );
+    await search.fill(all[0].slice(0, 4));
+    check("Jadvaldagi qidiruv mos qatorni qoldiradi", (await names()).includes(all[0]));
+    await search.fill("");
+    await tbl.locator("th", { hasText: "Mutaxassis" }).first().click();
+    const asc = await names();
+    check(
+      "Sarlavha bosilganda jadval o'sish tartibida saralanadi",
+      asc.length === all.length && asc.every((n, i) => i === 0 || asc[i - 1].localeCompare(n, "uz", { numeric: true }) <= 0),
+      asc.join(" | "),
+    );
+    await tbl.locator("th", { hasText: "Mutaxassis" }).first().click();
+    const desc = await names();
+    check("Ikkinchi bosishda kamayish tartibida", desc.join("|") === [...asc].reverse().join("|"));
+  }
+
   // Parolni o'zgartirish: joriy parol noto'g'ri bo'lsa rad etiladi
   await page.goto(`${BASE}/settings`);
   await page.waitForLoadState("networkidle");
