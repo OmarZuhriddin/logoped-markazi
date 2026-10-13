@@ -6,11 +6,11 @@ export const metadata: Metadata = {
   title: "Logopedik markaz CRM",
   description:
     "Logopedik markaz uchun boshqaruv tizimi: filiallar, mutaxassislar, mijozlar, jadval, davomat va to'lovlar.",
-  applicationName: "Logoped CRM",
+  applicationName: "Logoped",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "Logoped CRM",
+    title: "Logoped",
     statusBarStyle: "default",
   },
   icons: {
