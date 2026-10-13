@@ -1,4 +1,5 @@
 import { getSessionTypes } from "@/lib/session-types";
+import { CheckedSubmit } from "@/components/checked-submit";
 import { DateField } from "@/components/date-field";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -25,7 +26,7 @@ import {
   input,
   label,
 } from "@/components/ui";
-import { createSession, deleteSession, setSessionStatus } from "./actions";
+import { checkSessionBalance, createSession, deleteSession, setSessionStatus } from "./actions";
 
 type Search = { w?: string; b?: string; s?: string; yangi?: string };
 
@@ -330,9 +331,10 @@ export default async function SchedulePage({
               <input id="note" name="note" className={input} placeholder={t("masalan: ota-ona bilan")} />
             </div>
             <div className="flex items-end">
-              <button type="submit" className={`${btnPrimary} w-full`}>
+              <input type="hidden" name="allowDebt" defaultValue="" />
+              <CheckedSubmit check={checkSessionBalance} className={`${btnPrimary} w-full`}>
                 {t("Qo'shish")}
-              </button>
+              </CheckedSubmit>
             </div>
           </form>
         </details>

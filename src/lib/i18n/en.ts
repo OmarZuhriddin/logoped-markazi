@@ -787,4 +787,8 @@ export const en: Record<string, string> = {
   "Masalan: Logoped": "E.g. Speech therapist",
   "Mutaxassislikni yozing.": "Enter the specialty.",
   "Mutaxassislik 60 belgidan oshmasin.": "The specialty must be at most 60 characters.",
+  "Mijozning bu vaqtda boshqa seansi bor.": "The client already has another session at this time.",
+  "Mijozning puli yetmaydi: qoldiq {balance}, seans narxi {price}. Baribir yozish uchun tasdiqlang.": "The client's money is not enough: balance {balance}, session price {price}. Confirm to book anyway.",
+  "Seans yozildi: {name} · {when}. Diqqat: mijoz {debt} qarzga kirdi.": "Session booked: {name} · {when}. Note: the client is now {debt} in debt.",
+  "Mijozning puli yetmaydi.\nQoldiq (rejadagi seanslarni hisobga olganda): {balance}\nYangi seans narxi: {price}\nBaribir yozsangiz, mijoz {debt} qarzga kiradi.\n\nBaribir yozilsinmi?": "The client does not have enough money.\nBalance (counting planned sessions): {balance}\nNew session price: {price}\nIf you book anyway, the client will owe {debt}.\n\nBook anyway?",
 };

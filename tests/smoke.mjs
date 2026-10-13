@@ -103,6 +103,8 @@ const check = (name, cond, extra = "") =>
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 const page = await ctx.newPage();
+// Mijozning puli yetmasa seans yozishda tasdiq so'raladi — sinovlar uni qabul qiladi
+page.on("dialog", (d) => d.accept());
 
 const failedRequests = [];
 page.on("requestfailed", (r) =>
@@ -946,6 +948,24 @@ if (await payRow.count()) {
     "Kunlik mijozga seans yoziladi",
     added,
     added ? "" : (await page.locator("main").innerText()).split("\n").slice(0, 3).join(" | "),
+  );
+
+  // Pul yo'q mijozga seans yozilganda qarzga kirgani aytiladi (tasdiq oynasi qabul qilingan)
+  const kidPays = Number((await one("SELECT COALESCE(SUM(amount), 0) AS n FROM Payment WHERE clientId = ?", kid.id)).n);
+  if (added && kidService.price > 0 && kidPays === 0) {
+    check(
+      "Puli yetmagan mijoz qarzga kirgani haqida xabar chiqadi",
+      (await page.locator("body").innerText()).includes("qarzga kirdi"),
+    );
+  }
+
+  // Mijozga bir vaqtga ikkinchi seans yozilmaydi
+  await bookKid();
+  await page.waitForTimeout(1500);
+  check(
+    "Mijozga bir vaqtga ikkita seans yozilmaydi",
+    (await count("SELECT COUNT(*) AS n FROM Session WHERE clientId = ?", kid.id)) === 1 &&
+      (await page.locator("body").innerText()).includes("boshqa seansi bor"),
   );
 
   const sess = added

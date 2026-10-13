@@ -1,4 +1,5 @@
 import { getSessionTypes } from "@/lib/session-types";
+import { CheckedSubmit } from "@/components/checked-submit";
 import { TableTools } from "@/components/table-tools";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -9,7 +10,7 @@ import { addDays, startOfDay } from "@/lib/stats";
 import { dateShort, timeUz } from "@/lib/format";
 import { getT } from "@/lib/i18n/server";
 import { Card, Empty, PageHeader, btn, btnPrimary, card, input, label } from "@/components/ui";
-import { createSession } from "@/app/(app)/schedule/actions";
+import { checkSessionBalance, createSession } from "@/app/(app)/schedule/actions";
 
 type Search = { w?: string; sp?: string; d?: string; b?: string };
 
@@ -308,9 +309,10 @@ export default async function SlotsPage({
                       aria-label={t("Davomiyligi (daqiqa)")}
                       className="w-20 rounded-lg border border-slate-200 px-2 py-1.5 text-sm tabular-nums dark:border-slate-700 dark:bg-slate-900"
                     />
-                    <button type="submit" className={`${btnPrimary} flex-1`}>
+                    <input type="hidden" name="allowDebt" defaultValue="" />
+                    <CheckedSubmit check={checkSessionBalance} className={`${btnPrimary} flex-1`}>
                       {t("Yozish")}
-                    </button>
+                    </CheckedSubmit>
                   </div>
                 </form>
               ))}
