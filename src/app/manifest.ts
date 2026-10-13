@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 /** Telefonning bosh ekraniga o'rnatish uchun ilova ta'rifi */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Logopedik markaz CRM",
-    short_name: "Logoped CRM",
+    name: "Logoped",
+    short_name: "Logoped",
     description:
       "Logopedik markaz boshqaruvi: jadval, davomat, mijozlar va to'lovlar.",
     lang: "uz",
