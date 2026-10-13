@@ -77,16 +77,26 @@ export function toDateInput(d: Date | string): string {
 }
 
 /**
- * Sana maydonidan kelgan matnni Date ga aylantiradi: "05.05.2020" (kun.oy.yil)
- * yoki "2020-05-05". Noto'g'ri sana (31.02.2020 ham) NaN beradi.
+ * Sana maydonidan kelgan matnni Date ga aylantiradi: "05.05.2020" (kun.oy.yil),
+ * "05.05.2020 09:30" yoki ISO ("2020-05-05", "2020-05-05T09:30"). Noto'g'ri
+ * sana (31.02.2020 ham) NaN beradi.
+ *
+ * Vaqtsiz sana UTC yarim tunida olinadi (sana-kunlik maydonlar shunday
+ * saqlanadi), vaqtli matn esa markaz vaqti (jarayon zonasi) deb tushuniladi.
  */
 export function parseDateInput(raw: string): Date {
   const s = raw.trim();
-  const m = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(s);
+  const m = /^(\d{1,2})\.(\d{1,2})\.(\d{4})(?: (\d{1,2}):(\d{2}))?$/.exec(s);
   if (!m) return new Date(s);
   const [d, mo, y] = [Number(m[1]), Number(m[2]), Number(m[3])];
-  const date = new Date(Date.UTC(y, mo - 1, d));
-  return date.getUTCDate() === d && date.getUTCMonth() === mo - 1 ? date : new Date(NaN);
+  if (m[4] === undefined) {
+    const date = new Date(Date.UTC(y, mo - 1, d));
+    return date.getUTCDate() === d && date.getUTCMonth() === mo - 1 ? date : new Date(NaN);
+  }
+  const [h, min] = [Number(m[4]), Number(m[5])];
+  const date = new Date(y, mo - 1, d, h, min);
+  const ok = date.getDate() === d && date.getMonth() === mo - 1 && h < 24 && min < 60;
+  return ok ? date : new Date(NaN);
 }
 
 /** <input type="datetime-local"> uchun 2026-03-14T09:30 */

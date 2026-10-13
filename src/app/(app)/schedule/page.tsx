@@ -1,4 +1,5 @@
 import { getSessionTypes } from "@/lib/session-types";
+import { DateField } from "@/components/date-field";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireUser, sessionScope, clientScope, NOT_SOLO } from "@/lib/auth";
@@ -279,13 +280,7 @@ export default async function SchedulePage({
               <label className={label} htmlFor="startsAt">
                 {t("Sana va vaqt")}
               </label>
-              <input
-                id="startsAt"
-                name="startsAt"
-                type="datetime-local"
-                className={input}
-                required
-              />
+              <DateField id="startsAt" name="startsAt" withTime required />
             </div>
             <div>
               <label className={label} htmlFor="durationMin">

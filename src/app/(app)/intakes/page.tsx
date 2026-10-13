@@ -191,14 +191,7 @@ export default async function IntakesPage({
             <label className={label} htmlFor="scheduledAt">
               {t("Qabul vaqti")} *
             </label>
-            <input
-              id="scheduledAt"
-              name="scheduledAt"
-              type="datetime-local"
-              defaultValue={toDateTimeInput(new Date())}
-              className={input}
-              required
-            />
+            <DateField id="scheduledAt" name="scheduledAt" withTime defaultValue={toDateTimeInput(new Date())} required />
           </div>
           {/* Yakka mutaxassisda "kim ko'radi" degan savol yo'q — doim o'zi (server ham shuni qo'yadi) */}
           {isSolo(user) ? null : (
@@ -456,13 +449,7 @@ export default async function IntakesPage({
                           </div>
                           <div>
                             <label className={label}>{t("Qabul vaqti")}</label>
-                            <input
-                              name="scheduledAt"
-                              type="datetime-local"
-                              defaultValue={toDateTimeInput(i.scheduledAt)}
-                              className={input}
-                              required
-                            />
+                            <DateField name="scheduledAt" withTime defaultValue={toDateTimeInput(i.scheduledAt)} required />
                           </div>
                           <div>
                             <label className={label}>{t("Kim ko'radi")}</label>

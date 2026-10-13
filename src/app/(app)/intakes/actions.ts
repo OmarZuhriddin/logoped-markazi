@@ -71,7 +71,7 @@ async function createIntakeImpl(formData: FormData) {
   }
   const birthDate = parseDateInput(birthDateRaw);
   if (Number.isNaN(birthDate.getTime())) throw new Error("Tug'ilgan sana noto'g'ri.");
-  const scheduledAt = new Date(scheduledRaw);
+  const scheduledAt = parseDateInput(scheduledRaw);
   if (Number.isNaN(scheduledAt.getTime())) throw new Error("Qabul vaqti noto'g'ri.");
   if (!Number.isFinite(price) || price < 0) throw new Error("Narx noto'g'ri kiritilgan.");
 
@@ -131,7 +131,7 @@ async function updateIntakeImpl(formData: FormData) {
   }
   const birthDate = parseDateInput(birthDateRaw);
   if (Number.isNaN(birthDate.getTime())) throw new Error("Tug'ilgan sana noto'g'ri.");
-  const scheduledAt = new Date(scheduledRaw);
+  const scheduledAt = parseDateInput(scheduledRaw);
   if (Number.isNaN(scheduledAt.getTime())) throw new Error("Qabul vaqti noto'g'ri.");
   if (!Number.isFinite(price) || price < 0) throw new Error("Narx noto'g'ri kiritilgan.");
 

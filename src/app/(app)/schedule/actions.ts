@@ -1,5 +1,6 @@
 "use server";
 
+import { parseDateInput } from "@/lib/format";
 import { revalidatePath } from "next/cache";
 import { withFlash } from "@/lib/action";
 import { setFlash } from "@/lib/flash";
@@ -122,7 +123,7 @@ async function createSessionImpl(formData: FormData) {
     throw new Error("Mijoz, mutaxassis va vaqtni to'liq kiriting.");
   }
 
-  const startsAt = new Date(startsAtRaw);
+  const startsAt = parseDateInput(startsAtRaw);
   if (Number.isNaN(startsAt.getTime())) throw new Error("Vaqt formati noto'g'ri.");
 
   const [client, specialist] = await Promise.all([
